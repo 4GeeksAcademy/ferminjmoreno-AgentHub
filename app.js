@@ -9,8 +9,11 @@ const openUserModalButtons = document.querySelectorAll('.open-user-modal');
 
 function setTheme(theme) {
   const isDark = theme === 'dark';
-  root.classList.toggle('dark', isDark);
-  themeToggle.textContent = isDark ? '🌙' : '☀️';
+  root.classList.remove('dark', 'light');
+  root.classList.add(isDark ? 'dark' : 'light');
+  themeToggle.textContent = isDark ? '☀️' : '🌙';
+  themeToggle.setAttribute('aria-label', isDark ? 'Activar modo claro' : 'Activar modo oscuro');
+  themeToggle.setAttribute('title', isDark ? 'Activar modo claro' : 'Activar modo oscuro');
   localStorage.setItem('agenthub-theme', theme);
 }
 

@@ -1,3 +1,5 @@
+@custom-variant dark (&:where(.dark, .dark *));
+
 :root {
   color-scheme: light;
 }
@@ -6,8 +8,59 @@ html.dark {
   color-scheme: dark;
 }
 
+html.light {
+  color-scheme: light;
+}
+
 body {
   font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+  transition: background-color 0.25s ease, color 0.25s ease;
+}
+
+html.light body {
+  background-color: #f8fafc;
+  color: #0f172a;
+}
+
+html.dark body {
+  background-color: #020817;
+  color: #e2e8f0;
+}
+
+html.light aside,
+html.light header {
+  background: rgba(255, 255, 255, 0.97);
+  border-color: rgba(148, 163, 184, 0.35);
+  backdrop-filter: none;
+}
+
+html.dark aside,
+html.dark header {
+  background: rgba(15, 23, 42, 0.96);
+  border-color: rgba(51, 65, 85, 0.95);
+  backdrop-filter: none;
+}
+
+html.light .nav-item,
+html.light .filter-chip,
+html.light .metric-card,
+html.light .skill-card,
+html.light .contract-card,
+html.light .log-row,
+html.light .agent-row,
+html.light .modal-panel {
+  background: rgba(255, 255, 255, 0.96);
+}
+
+html.dark .nav-item,
+html.dark .filter-chip,
+html.dark .metric-card,
+html.dark .skill-card,
+html.dark .contract-card,
+html.dark .log-row,
+html.dark .agent-row,
+html.dark .modal-panel {
+  background: rgba(15, 23, 42, 0.9);
 }
 
 .nav-item {

@@ -1,525 +1,1477 @@
 <!DOCTYPE html>
 <html lang="es" class="dark">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>AgentHub Admin</title>
-    <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
-    <link rel="stylesheet" href="styles.css" />
-  </head>
-  <body class="bg-slate-100 text-slate-800 dark:bg-slate-950 dark:text-slate-100">
-    <div class="min-h-screen flex">
-      <aside class="hidden md:flex md:w-72 flex-col border-r border-slate-200 bg-white/80 backdrop-blur-xl dark:border-slate-800 dark:bg-slate-900/80">
-        <div class="flex items-center gap-3 px-6 py-5 border-b border-slate-200 dark:border-slate-800">
-          <div class="flex h-10 w-10 items-center justify-center rounded-xl bg-indigo-600 text-lg font-bold text-white shadow-lg shadow-indigo-600/30">A</div>
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>AgentHub | Panel Administrativo - Plataforma de Alquiler de Agentes IA</title>
+  <meta name="description" content="Panel de administración de AgentHub para la gestión, equipamiento de habilidades y supervisión de agentes de inteligencia artificial en alquiler.">
+  <meta property="og:title" content="AgentHub - Panel Administrativo de Agentes IA">
+  <meta property="og:description" content="Supervisa y orquesta tu fuerza laboral digital inteligente de agentes IA autónomos.">
+  <meta property="og:type" content="website">
+
+  <!-- Tailwind CSS CDN oficial -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      darkMode: 'class',
+      theme: {
+        extend: {
+          colors: {
+            brand: {
+              50: '#eef2ff',
+              100: '#e0e7ff',
+              200: '#c7d2fe',
+              500: '#6366f1',
+              600: '#4f46e5',
+              700: '#4338ca',
+              800: '#3730a3',
+              900: '#312e81',
+            }
+          }
+        }
+      }
+    }
+  </script>
+
+  <style>
+    /* Transición suave para colapsables y tema */
+    .collapsible-content {
+      transition: max-height 0.35s cubic-bezier(0.4, 0, 0.2, 1), opacity 0.25s ease-in-out;
+    }
+    /* Estilo de barras de scroll sutiles */
+    ::-webkit-scrollbar {
+      width: 6px;
+      height: 6px;
+    }
+    ::-webkit-scrollbar-track {
+      background: transparent;
+    }
+    ::-webkit-scrollbar-thumb {
+      background: rgba(156, 163, 175, 0.3);
+      border-radius: 9999px;
+    }
+    ::-webkit-scrollbar-thumb:hover {
+      background: rgba(156, 163, 175, 0.5);
+    }
+  </style>
+</head>
+<body class="bg-slate-50 dark:bg-slate-950 text-slate-800 dark:text-slate-100 font-sans antialiased selection:bg-indigo-500 selection:text-white transition-colors duration-200">
+
+  <div class="flex h-screen overflow-hidden">
+
+    <!-- ========================================================================= -->
+    <!-- SIDEBAR PERSISTENTE (Navegación Lateral de 6 Secciones)                    -->
+    <!-- ========================================================================= -->
+    <aside id="sidebar" role="navigation" aria-label="Navegación Principal" class="w-64 bg-slate-900 text-slate-300 border-r border-slate-800 flex flex-col flex-shrink-0 z-30 select-none">
+      
+      <!-- Logotipo de Marca -->
+      <div class="h-16 flex items-center px-6 border-b border-slate-800 space-x-3">
+        <div class="w-10 h-10 rounded-xl bg-gradient-to-tr from-indigo-600 to-violet-500 flex items-center justify-center shadow-lg shadow-indigo-500/30 text-white">
+          <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10"></path>
+          </svg>
+        </div>
+        <div>
+          <span class="font-bold text-lg text-white tracking-tight flex items-center gap-1.5">
+            AgentHub
+            <span class="text-[10px] uppercase font-semibold px-1.5 py-0.5 rounded bg-indigo-500/20 text-indigo-400 border border-indigo-500/30">AaaS</span>
+          </span>
+          <p class="text-xs text-slate-400">Admin Control Panel</p>
+        </div>
+      </div>
+
+      <!-- Menú de Enlaces de las 6 Secciones -->
+      <nav class="flex-1 py-6 px-3 space-y-1.5 overflow-y-auto">
+        
+        <!-- 1. Dashboard -->
+        <button onclick="navigateSection('dashboard')" id="nav-btn-dashboard" class="nav-item w-full flex items-center px-3.5 py-2.5 rounded-xl text-sm font-medium transition-all group bg-indigo-600 text-white shadow-md shadow-indigo-600/20">
+          <svg class="w-5 h-5 mr-3 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6"></path>
+          </svg>
+          <span class="flex-1 text-left">Dashboard</span>
+          <span class="text-xs py-0.5 px-2 rounded-full bg-indigo-500/30 text-white font-mono">Live</span>
+        </button>
+
+        <!-- 2. Gestión de Usuarios -->
+        <button onclick="navigateSection('usuarios')" id="nav-btn-usuarios" class="nav-item w-full flex items-center px-3.5 py-2.5 rounded-xl text-sm font-medium transition-all group hover:bg-slate-800 hover:text-white text-slate-400">
+          <svg class="w-5 h-5 mr-3 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197M13 7a4 4 0 11-8 0 4 4 0 018 0z"></path>
+          </svg>
+          <span class="flex-1 text-left">Usuarios</span>
+          <span id="badge-users-count" class="text-xs py-0.5 px-2 rounded-full bg-slate-800 text-slate-300 font-mono">5</span>
+        </button>
+
+        <!-- 3. Gestión de Agentes -->
+        <button onclick="navigateSection('agentes')" id="nav-btn-agentes" class="nav-item w-full flex items-center px-3.5 py-2.5 rounded-xl text-sm font-medium transition-all group hover:bg-slate-800 hover:text-white text-slate-400">
+          <svg class="w-5 h-5 mr-3 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9.75 17L9 20l-1 1h8l-1-1-.75-3M3 13h18M5 17h14a2 2 0 002-2V5a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"></path>
+          </svg>
+          <span class="flex-1 text-left">Agentes IA</span>
+          <span class="text-xs py-0.5 px-2 rounded-full bg-slate-800 text-slate-300 font-mono">4</span>
+        </button>
+
+        <!-- 4. Catálogo de Skills -->
+        <button onclick="navigateSection('skills')" id="nav-btn-skills" class="nav-item w-full flex items-center px-3.5 py-2.5 rounded-xl text-sm font-medium transition-all group hover:bg-slate-800 hover:text-white text-slate-400">
+          <svg class="w-5 h-5 mr-3 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 4a2 2 0 114 0v1a1 1 0 001 1h3a1 1 0 011 1v3a1 1 0 01-1 1h-1a2 2 0 100 4h1a1 1 0 011 1v3a1 1 0 01-1 1h-3a1 1 0 01-1-1v-1a2 2 0 10-4 0v1a1 1 0 01-1 1H7a1 1 0 01-1-1v-3a1 1 0 00-1-1H4a2 2 0 110-4h1a1 1 0 001-1V7a1 1 0 011-1h3a1 1 0 001-1V4z"></path>
+          </svg>
+          <span class="flex-1 text-left">Catálogo de Skills</span>
+          <span class="text-xs py-0.5 px-2 rounded-full bg-purple-900/40 text-purple-300 font-mono">4</span>
+        </button>
+
+        <!-- 5. Contrataciones -->
+        <button onclick="navigateSection('contrataciones')" id="nav-btn-contrataciones" class="nav-item w-full flex items-center px-3.5 py-2.5 rounded-xl text-sm font-medium transition-all group hover:bg-slate-800 hover:text-white text-slate-400">
+          <svg class="w-5 h-5 mr-3 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path>
+          </svg>
+          <span class="flex-1 text-left">Contrataciones</span>
+          <span class="text-xs py-0.5 px-2 rounded-full bg-emerald-900/40 text-emerald-300 font-mono">$MRR</span>
+        </button>
+
+        <!-- 6. Logs de Errores -->
+        <button onclick="navigateSection('logs')" id="nav-btn-logs" class="nav-item w-full flex items-center px-3.5 py-2.5 rounded-xl text-sm font-medium transition-all group hover:bg-slate-800 hover:text-white text-slate-400">
+          <svg class="w-5 h-5 mr-3 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"></path>
+          </svg>
+          <span class="flex-1 text-left">Logs de Errores</span>
+          <span id="badge-logs-alert" class="text-xs py-0.5 px-2 rounded-full bg-rose-500/20 text-rose-300 border border-rose-500/30 font-mono font-bold">12</span>
+        </button>
+
+      </nav>
+
+      <!-- Pie de Sidebar con Perfil de Administrador -->
+      <div class="p-4 border-t border-slate-800 flex items-center space-x-3 bg-slate-900/50">
+        <div class="w-9 h-9 rounded-xl bg-slate-800 border border-slate-700 flex items-center justify-center text-indigo-400 font-bold text-sm">
+          SA
+        </div>
+        <div class="flex-1 min-w-0">
+          <p class="text-sm font-medium text-white truncate">Super Admin</p>
+          <p class="text-xs text-slate-400 truncate">ops@agenthub.ai</p>
+        </div>
+        <div class="w-2.5 h-2.5 rounded-full bg-emerald-500 ring-4 ring-emerald-500/20" title="En línea"></div>
+      </div>
+    </aside>
+
+
+    <!-- ========================================================================= -->
+    <!-- ÁREA DE CONTENIDO PRINCIPAL                                               -->
+    <!-- ========================================================================= -->
+    <div class="flex-1 flex flex-col min-w-0 overflow-hidden">
+      
+      <!-- Top Header con Buscador, Salud y Toggle Dark/Light Mode -->
+      <header id="topbar" class="h-16 border-b border-slate-200 dark:border-slate-800 bg-white/80 dark:bg-slate-900/80 backdrop-blur px-6 flex items-center justify-between z-20 transition-colors">
+        
+        <!-- Título dinámico de la sección -->
+        <div class="flex items-center space-x-3">
+          <h1 id="topbar-title" class="text-lg font-bold text-slate-900 dark:text-white tracking-tight">Dashboard General</h1>
+          <span class="text-slate-300 dark:text-slate-700">|</span>
+          <span class="text-xs font-medium text-slate-500 dark:text-slate-400 flex items-center gap-1.5">
+            <span class="w-2 h-2 rounded-full bg-emerald-500 animate-pulse"></span>
+            Flota Operativa: 99.05%
+          </span>
+        </div>
+
+        <!-- Acciones del Header: Buscador, Notificaciones y Dark Mode Toggle -->
+        <div class="flex items-center space-x-4">
+          
+          <!-- Buscador Decorativo -->
+          <div class="relative hidden sm:block">
+            <input type="text" placeholder="Buscar en AgentHub (Ctrl + K)..." class="w-64 pl-9 pr-4 py-1.5 text-xs rounded-xl bg-slate-100 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 text-slate-700 dark:text-slate-200 focus:outline-none focus:ring-2 focus:ring-indigo-500">
+            <svg class="w-4 h-4 text-slate-400 absolute left-3 top-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path>
+            </svg>
+          </div>
+
+          <!-- BOTÓN TOGGLE DARK / LIGHT MODE (Req 2) -->
+          <button id="theme-toggle-btn" onclick="toggleTheme()" aria-label="Cambiar modo claro / oscuro" class="p-2 rounded-xl bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-300 hover:bg-slate-200 dark:hover:bg-slate-700 transition-colors focus:outline-none focus:ring-2 focus:ring-indigo-500">
+            <!-- Icono Sol (Modo Claro) -->
+            <svg id="theme-icon-sun" class="w-5 h-5 hidden" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 3v1m0 16v1m9-9h-1M4 9H3m15.364 6.364l-.707-.707M6.343 6.343l-.707-.707m12.728 0l-.707.707M6.343 17.657l-.707.707M16 12a4 4 0 11-8 0 4 4 0 018 0z"></path>
+            </svg>
+            <!-- Icono Luna (Modo Oscuro) -->
+            <svg id="theme-icon-moon" class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z"></path>
+            </svg>
+          </button>
+
+          <!-- Separador -->
+          <div class="h-6 w-px bg-slate-200 dark:bg-slate-800"></div>
+
+          <!-- Notificaciones Rápidas -->
+          <button class="relative p-2 rounded-xl text-slate-500 hover:text-slate-700 dark:text-slate-400 dark:hover:text-slate-200 hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors">
+            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9"></path>
+            </svg>
+            <span class="absolute top-1.5 right-1.5 w-2 h-2 bg-rose-500 rounded-full"></span>
+          </button>
+        </div>
+      </header>
+
+      <!-- Contenedor Dinámico Principal con Scroll -->
+      <main id="main-content" class="flex-1 overflow-y-auto p-6 md:p-8 space-y-6">
+
+        <!-- =================================================================== -->
+        <!-- SECCIÓN 1: DASHBOARD DE UN VISTAZO (Req 3)                          -->
+        <!-- =================================================================== -->
+        <section id="view-dashboard" class="space-y-6">
+          
+          <!-- Encabezado de Vista -->
           <div>
-            <div class="text-lg font-semibold">AgentHub</div>
-            <div class="text-xs text-slate-500 dark:text-slate-400">Operations Console</div>
+            <h2 class="text-2xl font-bold text-slate-900 dark:text-white tracking-tight">Rendimiento Operativo y Financiero</h2>
+            <p class="text-sm text-slate-500 dark:text-slate-400">Monitoreo de ingresos recurrentes, uso de flota y excepciones en tiempo real.</p>
           </div>
-        </div>
 
-        <nav class="flex-1 space-y-2 p-4">
-          <button class="nav-item active" data-section="overview">
-            <span>Resumen</span>
-          </button>
-          <button class="nav-item" data-section="users">
-            <span>Usuarios</span>
-          </button>
-          <button class="nav-item" data-section="fleet">
-            <span>Agentes</span>
-          </button>
-          <button class="nav-item" data-section="skills">
-            <span>Habilidades</span>
-          </button>
-          <button class="nav-item" data-section="contracts">
-            <span>Contratos</span>
-          </button>
-          <button class="nav-item" data-section="logs">
-            <span>Logs</span>
-          </button>
-        </nav>
-
-        <div class="border-t border-slate-200 p-4 dark:border-slate-800">
-          <div class="rounded-2xl bg-indigo-50 p-4 text-indigo-900 dark:bg-indigo-950/40 dark:text-indigo-100">
-            <div class="text-xs uppercase tracking-[0.18em] text-indigo-500">Platform health</div>
-            <div class="mt-2 flex items-center justify-between">
-              <span class="font-semibold">99.96%</span>
-              <span class="rounded-full bg-emerald-500/15 px-2 py-1 text-[10px] font-medium text-emerald-600 dark:text-emerald-400">Stable</span>
+          <!-- Cuadrícula 2x2 / 4-cols de Tarjetas de Métrica con Acento y Elevación (REQ-1.1 & REQ-1.2) -->
+          <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5">
+            
+            <!-- 3.1 Ingresos Totales del Mes (Acento Esmeralda) -->
+            <div class="bg-white dark:bg-slate-900 p-5 rounded-2xl border border-slate-200 dark:border-slate-800 shadow-sm hover:shadow-md hover:-translate-y-0.5 transition-all">
+              <div class="flex items-center justify-between">
+                <span class="text-xs font-semibold uppercase tracking-wider text-slate-500 dark:text-slate-400">Ingresos Totales (Mes)</span>
+                <div class="w-10 h-10 rounded-xl bg-emerald-50 dark:bg-emerald-950/50 text-emerald-600 dark:text-emerald-400 flex items-center justify-center">
+                  <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                  </svg>
+                </div>
+              </div>
+              <div class="mt-3">
+                <span class="text-2xl font-bold text-slate-900 dark:text-white font-mono">$128,450.00</span>
+                <div class="mt-1 flex items-center text-xs text-emerald-600 dark:text-emerald-400 font-medium">
+                  <svg class="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6"></path>
+                  </svg>
+                  <span>+14.2% vs mes anterior</span>
+                </div>
+              </div>
             </div>
-          </div>
-        </div>
-      </aside>
 
-      <div class="flex-1">
-        <header class="sticky top-0 z-30 border-b border-slate-200 bg-white/80 backdrop-blur-xl dark:border-slate-800 dark:bg-slate-900/80">
-          <div class="flex items-center justify-between px-4 py-3 sm:px-6">
-            <div class="flex items-center gap-3">
-              <button class="md:hidden rounded-lg border border-slate-200 bg-white px-2 py-1 text-sm dark:border-slate-700 dark:bg-slate-800">Menu</button>
+            <!-- 3.2 Pérdida Total por Descuentos y Cupones (Acento Ámbar) -->
+            <div class="bg-white dark:bg-slate-900 p-5 rounded-2xl border border-slate-200 dark:border-slate-800 shadow-sm hover:shadow-md hover:-translate-y-0.5 transition-all">
+              <div class="flex items-center justify-between">
+                <span class="text-xs font-semibold uppercase tracking-wider text-slate-500 dark:text-slate-400">Pérdida por Descuentos</span>
+                <div class="w-10 h-10 rounded-xl bg-amber-50 dark:bg-amber-950/50 text-amber-600 dark:text-amber-400 flex items-center justify-center">
+                  <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 7h.01M7 3h5c.512 0 1.024.195 1.414.586l7 7a2 2 0 010 2.828l-7 7a2 2 0 01-2.828 0l-7-7A1.994 1.994 0 013 12V7a4 4 0 014-4z"></path>
+                  </svg>
+                </div>
+              </div>
+              <div class="mt-3">
+                <span class="text-2xl font-bold text-slate-900 dark:text-white font-mono">-$14,320.00</span>
+                <div class="mt-1 flex items-center text-xs text-amber-600 dark:text-amber-400 font-medium">
+                  <span>11.1% del volumen facturado</span>
+                </div>
+              </div>
+            </div>
+
+            <!-- 3.3 Agentes Activos en Clientes (Acento Índigo) -->
+            <div class="bg-white dark:bg-slate-900 p-5 rounded-2xl border border-slate-200 dark:border-slate-800 shadow-sm hover:shadow-md hover:-translate-y-0.5 transition-all">
+              <div class="flex items-center justify-between">
+                <span class="text-xs font-semibold uppercase tracking-wider text-slate-500 dark:text-slate-400">Agentes Activos Globales</span>
+                <div class="w-10 h-10 rounded-xl bg-indigo-50 dark:bg-indigo-950/50 text-indigo-600 dark:text-indigo-400 flex items-center justify-center">
+                  <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 3v2m6-2v2M9 19v2m6-2v2M5 9H3m2 6H3m18-6h-2m2 6h-2M7 19h10a2 2 0 002-2V7a2 2 0 00-2-2H7a2 2 0 00-2 2v10a2 2 0 002 2z"></path>
+                  </svg>
+                </div>
+              </div>
+              <div class="mt-3">
+                <span class="text-2xl font-bold text-slate-900 dark:text-white font-mono">1,248</span>
+                <div class="mt-1 flex items-center text-xs text-indigo-600 dark:text-indigo-400 font-medium">
+                  <span>Distribuidos en 142 clientes</span>
+                </div>
+              </div>
+            </div>
+
+            <!-- 3.4 Agentes Marcados como Fallando (Acento Carmesí - Reactivo) -->
+            <div class="bg-white dark:bg-slate-900 p-5 rounded-2xl border border-slate-200 dark:border-slate-800 shadow-sm hover:shadow-md hover:-translate-y-0.5 transition-all">
+              <div class="flex items-center justify-between">
+                <span class="text-xs font-semibold uppercase tracking-wider text-slate-500 dark:text-slate-400">Agentes Fallando</span>
+                <div class="w-10 h-10 rounded-xl bg-rose-50 dark:bg-rose-950/50 text-rose-600 dark:text-rose-400 flex items-center justify-center">
+                  <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                  </svg>
+                </div>
+              </div>
+              <div class="mt-3">
+                <span id="metric-failing-count" class="text-2xl font-bold text-rose-600 dark:text-rose-400 font-mono">12</span>
+                <div class="mt-1 flex items-center text-xs text-rose-600 dark:text-rose-400 font-medium">
+                  <span class="w-1.5 h-1.5 rounded-full bg-rose-500 mr-1.5 animate-ping"></span>
+                  <span id="metric-failing-subtext">Requieren atención de soporte</span>
+                </div>
+              </div>
+            </div>
+
+          </div>
+
+          <!-- Marcador de Posición para Gráfico de Actividad Semanal (REQ-1.3) -->
+          <div class="w-full bg-white dark:bg-slate-900/40 p-6 rounded-2xl border-2 border-dashed border-slate-300 dark:border-slate-800 flex flex-col justify-between">
+            
+            <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pb-6 border-b border-slate-100 dark:border-slate-800">
               <div>
-                <div class="text-xs uppercase tracking-[0.2em] text-slate-500 dark:text-slate-400">Panel administrativo</div>
-                <h1 class="text-xl font-semibold">AgentHub Console</h1>
+                <h3 class="text-base font-bold text-slate-900 dark:text-white flex items-center gap-2">
+                  <svg class="w-5 h-5 text-indigo-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"></path>
+                  </svg>
+                  Gráfico de Actividad Semanal de la Flota
+                </h3>
+                <p class="text-xs text-slate-500 dark:text-slate-400">Total de ejecuciones de tareas autónomas vs reintentos (Lunes a Domingo)</p>
+              </div>
+
+              <!-- Selector de Rango -->
+              <div class="flex items-center space-x-1.5 bg-slate-100 dark:bg-slate-800 p-1 rounded-xl self-start sm:self-auto">
+                <button class="px-3 py-1 text-xs font-semibold rounded-lg bg-white dark:bg-slate-700 text-slate-800 dark:text-white shadow-sm">7 Días</button>
+                <button class="px-3 py-1 text-xs font-medium rounded-lg text-slate-500 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white">30 Días</button>
               </div>
             </div>
 
-            <div class="flex items-center gap-3">
-              <div class="hidden rounded-full border border-slate-200 bg-slate-50 px-3 py-2 text-sm text-slate-600 dark:border-slate-700 dark:bg-slate-800 dark:text-slate-300 sm:flex">
-                <span class="mr-2">⌕</span> Search agents
+            <!-- Visualización de Barras de Actividad Simuladas (CSS Puro sin dependencias) -->
+            <div class="py-8">
+              <div class="h-48 flex items-end justify-between gap-2 sm:gap-6 px-4">
+                
+                <!-- Lun -->
+                <div class="flex-1 flex flex-col items-center gap-2 group">
+                  <div class="w-full max-w-[48px] bg-slate-100 dark:bg-slate-800 rounded-t-lg relative flex items-end overflow-hidden h-36">
+                    <div class="w-full bg-gradient-to-t from-indigo-600 to-indigo-400 rounded-t-lg transition-all duration-500 group-hover:brightness-110" style="height: 65%;"></div>
+                  </div>
+                  <span class="text-xs font-medium text-slate-500">Lun</span>
+                  <span class="text-[10px] text-slate-400 font-mono">14.2k</span>
+                </div>
+
+                <!-- Mar -->
+                <div class="flex-1 flex flex-col items-center gap-2 group">
+                  <div class="w-full max-w-[48px] bg-slate-100 dark:bg-slate-800 rounded-t-lg relative flex items-end overflow-hidden h-36">
+                    <div class="w-full bg-gradient-to-t from-indigo-600 to-indigo-400 rounded-t-lg transition-all duration-500 group-hover:brightness-110" style="height: 80%;"></div>
+                  </div>
+                  <span class="text-xs font-medium text-slate-500">Mar</span>
+                  <span class="text-[10px] text-slate-400 font-mono">18.5k</span>
+                </div>
+
+                <!-- Mie -->
+                <div class="flex-1 flex flex-col items-center gap-2 group">
+                  <div class="w-full max-w-[48px] bg-slate-100 dark:bg-slate-800 rounded-t-lg relative flex items-end overflow-hidden h-36">
+                    <div class="w-full bg-gradient-to-t from-indigo-600 to-indigo-400 rounded-t-lg transition-all duration-500 group-hover:brightness-110" style="height: 92%;"></div>
+                  </div>
+                  <span class="text-xs font-medium text-slate-500">Mié</span>
+                  <span class="text-[10px] text-slate-400 font-mono">22.1k</span>
+                </div>
+
+                <!-- Jue -->
+                <div class="flex-1 flex flex-col items-center gap-2 group">
+                  <div class="w-full max-w-[48px] bg-slate-100 dark:bg-slate-800 rounded-t-lg relative flex items-end overflow-hidden h-36">
+                    <div class="w-full bg-gradient-to-t from-indigo-600 to-indigo-400 rounded-t-lg transition-all duration-500 group-hover:brightness-110" style="height: 75%;"></div>
+                  </div>
+                  <span class="text-xs font-medium text-slate-500">Jue</span>
+                  <span class="text-[10px] text-slate-400 font-mono">17.8k</span>
+                </div>
+
+                <!-- Vie -->
+                <div class="flex-1 flex flex-col items-center gap-2 group">
+                  <div class="w-full max-w-[48px] bg-slate-100 dark:bg-slate-800 rounded-t-lg relative flex items-end overflow-hidden h-36">
+                    <div class="w-full bg-gradient-to-t from-indigo-600 to-indigo-400 rounded-t-lg transition-all duration-500 group-hover:brightness-110" style="height: 88%;"></div>
+                  </div>
+                  <span class="text-xs font-medium text-slate-500">Vie</span>
+                  <span class="text-[10px] text-slate-400 font-mono">20.4k</span>
+                </div>
+
+                <!-- Sab -->
+                <div class="flex-1 flex flex-col items-center gap-2 group">
+                  <div class="w-full max-w-[48px] bg-slate-100 dark:bg-slate-800 rounded-t-lg relative flex items-end overflow-hidden h-36">
+                    <div class="w-full bg-gradient-to-t from-indigo-600 to-indigo-400 rounded-t-lg transition-all duration-500 group-hover:brightness-110" style="height: 40%;"></div>
+                  </div>
+                  <span class="text-xs font-medium text-slate-500">Sáb</span>
+                  <span class="text-[10px] text-slate-400 font-mono">8.9k</span>
+                </div>
+
+                <!-- Dom -->
+                <div class="flex-1 flex flex-col items-center gap-2 group">
+                  <div class="w-full max-w-[48px] bg-slate-100 dark:bg-slate-800 rounded-t-lg relative flex items-end overflow-hidden h-36">
+                    <div class="w-full bg-gradient-to-t from-indigo-600 to-indigo-400 rounded-t-lg transition-all duration-500 group-hover:brightness-110" style="height: 48%;"></div>
+                  </div>
+                  <span class="text-xs font-medium text-slate-500">Dom</span>
+                  <span class="text-[10px] text-slate-400 font-mono">10.2k</span>
+                </div>
+
               </div>
-              <button id="theme-toggle" class="rounded-xl border border-slate-200 bg-white p-2 text-slate-700 transition hover:border-indigo-300 hover:text-indigo-600 dark:border-slate-700 dark:bg-slate-800 dark:text-slate-200">
-                ☀️
+            </div>
+
+            <!-- Leyenda -->
+            <div class="pt-4 border-t border-slate-100 dark:border-slate-800 flex items-center justify-center space-x-6 text-xs text-slate-500">
+              <span class="flex items-center gap-1.5">
+                <span class="w-3 h-3 rounded bg-indigo-500"></span>
+                Tareas Completadas con Éxito (98.6%)
+              </span>
+              <span class="flex items-center gap-1.5">
+                <span class="w-3 h-3 rounded bg-rose-500"></span>
+                Excepciones de Sandbox (1.4%)
+              </span>
+            </div>
+
+          </div>
+
+        </section>
+
+
+        <!-- =================================================================== -->
+        <!-- SECCIÓN 2: GESTIÓN DE USUARIOS (Req 4)                             -->
+        <!-- =================================================================== -->
+        <section id="view-usuarios" class="space-y-6 hidden">
+          
+          <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+            <div>
+              <h2 class="text-2xl font-bold text-slate-900 dark:text-white tracking-tight">Directorio de Usuarios y Clientes</h2>
+              <p class="text-sm text-slate-500 dark:text-slate-400">Administra cuentas corporativas, asignación de planes y estados de suscripción.</p>
+            </div>
+            <button class="inline-flex items-center px-4 py-2 rounded-xl bg-indigo-600 hover:bg-indigo-700 text-white text-sm font-medium shadow-md shadow-indigo-500/20 transition-all self-start sm:self-auto">
+              <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"></path>
+              </svg>
+              Nuevo Usuario
+            </button>
+          </div>
+
+          <!-- Tabla de Usuarios (REQ-2.1) -->
+          <div class="bg-white dark:bg-slate-900 rounded-2xl border border-slate-200 dark:border-slate-800 shadow-sm overflow-hidden">
+            <div class="overflow-x-auto">
+              <table class="w-full text-left text-sm text-slate-600 dark:text-slate-400">
+                <thead class="bg-slate-50 dark:bg-slate-800/60 text-xs uppercase font-semibold text-slate-500 dark:text-slate-400 border-b border-slate-200 dark:border-slate-800">
+                  <tr>
+                    <th scope="col" class="px-6 py-4">Usuario / Empresa</th>
+                    <th scope="col" class="px-6 py-4">Email Corporativo</th>
+                    <th scope="col" class="px-6 py-4">Plan</th>
+                    <th scope="col" class="px-6 py-4">Estado</th>
+                    <th scope="col" class="px-6 py-4 text-right">Acciones</th>
+                  </tr>
+                </thead>
+                <tbody id="users-table-body" class="divide-y divide-slate-100 dark:divide-slate-800">
+                  <!-- Se inyecta dinámicamente desde JavaScript -->
+                </tbody>
+              </table>
+            </div>
+          </div>
+
+        </section>
+
+
+        <!-- =================================================================== -->
+        <!-- SECCIÓN 3: GESTIÓN DE AGENTES (Req 5)                              -->
+        <!-- =================================================================== -->
+        <section id="view-agentes" class="space-y-6 hidden">
+          
+          <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+            <div>
+              <h2 class="text-2xl font-bold text-slate-900 dark:text-white tracking-tight">Flota de Agentes Inteligentes</h2>
+              <p class="text-sm text-slate-500 dark:text-slate-400">Monitorea instancias aprovisionadas, prompts de sistema y habilidades equipadas.</p>
+            </div>
+            <button class="inline-flex items-center px-4 py-2 rounded-xl bg-indigo-600 hover:bg-indigo-700 text-white text-sm font-medium shadow-md shadow-indigo-500/20 transition-all self-start sm:self-auto">
+              <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6"></path>
+              </svg>
+              Crear Nuevo Agente
+            </button>
+          </div>
+
+          <!-- Tabla de Agentes con Skills Colapsables (REQ-3.1 & REQ-3.2) -->
+          <div class="bg-white dark:bg-slate-900 rounded-2xl border border-slate-200 dark:border-slate-800 shadow-sm overflow-hidden">
+            <div class="overflow-x-auto">
+              <table class="w-full text-left text-sm text-slate-600 dark:text-slate-400">
+                <thead class="bg-slate-50 dark:bg-slate-800/60 text-xs uppercase font-semibold text-slate-500 dark:text-slate-400 border-b border-slate-200 dark:border-slate-800">
+                  <tr>
+                    <th scope="col" class="px-6 py-4">Agente & Modelo</th>
+                    <th scope="col" class="px-6 py-4">Propietario (Cliente)</th>
+                    <th scope="col" class="px-6 py-4">Estado Actual</th>
+                    <th scope="col" class="px-6 py-4">Habilidades (Skills)</th>
+                    <th scope="col" class="px-6 py-4 text-right">Acciones</th>
+                  </tr>
+                </thead>
+                <tbody id="agents-table-body" class="divide-y divide-slate-100 dark:divide-slate-800">
+                  <!-- Se inyecta dinámicamente desde JavaScript -->
+                </tbody>
+              </table>
+            </div>
+          </div>
+
+        </section>
+
+
+        <!-- =================================================================== -->
+        <!-- SECCIÓN 4: CATÁLOGO DE SKILLS (Req 6)                              -->
+        <!-- =================================================================== -->
+        <section id="view-skills" class="space-y-6 hidden">
+          
+          <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+            <div>
+              <h2 class="text-2xl font-bold text-slate-900 dark:text-white tracking-tight">Catálogo de Habilidades (Skills)</h2>
+              <p class="text-sm text-slate-500 dark:text-slate-400">Módulos de ejecución en sandbox con conectores seguros que pueden equiparse en los agentes.</p>
+            </div>
+            <button class="inline-flex items-center px-4 py-2 rounded-xl bg-indigo-600 hover:bg-indigo-700 text-white text-sm font-medium shadow-md shadow-indigo-500/20 transition-all self-start sm:self-auto">
+              <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"></path>
+              </svg>
+              Publicar Nueva Skill
+            </button>
+          </div>
+
+          <!-- Banner Educativo: ¿Qué es una Skill en AgentHub? (REQ-4.1) -->
+          <div class="bg-gradient-to-r from-indigo-50 via-purple-50 to-pink-50 dark:from-indigo-950/40 dark:via-purple-950/30 dark:to-slate-900 border border-indigo-200/80 dark:border-indigo-800/50 p-6 rounded-2xl flex items-start space-x-4">
+            <div class="w-12 h-12 rounded-xl bg-indigo-600 text-white flex-shrink-0 flex items-center justify-center shadow-lg shadow-indigo-500/20">
+              <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"></path>
+              </svg>
+            </div>
+            <div>
+              <h3 class="text-base font-bold text-indigo-950 dark:text-indigo-200">¿Qué representa una Skill en AgentHub?</h3>
+              <p class="mt-1 text-sm text-slate-600 dark:text-slate-300 leading-relaxed">
+                Una <strong>Skill</strong> es una unidad funcional autónoma que dota al Agente IA de acceso a herramientas externas: navegar por la web en un navegador sin cabeza (*headless sandbox*), procesar y consultar documentos vía RAG, sincronizar calendarios mediante OAuth bidireccional o disparar flujos de trabajo en CRMs corporativos. Cada habilidad se aísla con políticas de seguridad y cuotas estrictas de ejecución.
+              </p>
+            </div>
+          </div>
+
+          <!-- Cuadrícula de Tarjetas del Catálogo de Skills (REQ-4.2) -->
+          <div id="skills-catalog-grid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-2 gap-6">
+            <!-- Se inyecta dinámicamente desde JavaScript -->
+          </div>
+
+        </section>
+
+
+        <!-- =================================================================== -->
+        <!-- SECCIÓN 5: CONTRATACIONES DE AGENTES (Req 7)                       -->
+        <!-- =================================================================== -->
+        <section id="view-contrataciones" class="space-y-6 hidden">
+          
+          <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+            <div>
+              <h2 class="text-2xl font-bold text-slate-900 dark:text-white tracking-tight">Contratos de Alquiler y Facturación</h2>
+              <p class="text-sm text-slate-500 dark:text-slate-400">Historial completo de acuerdos de arrendamiento de agentes activos y pasados.</p>
+            </div>
+            <button class="inline-flex items-center px-4 py-2 rounded-xl bg-indigo-600 hover:bg-indigo-700 text-white text-sm font-medium shadow-md shadow-indigo-500/20 transition-all self-start sm:self-auto">
+              <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"></path>
+              </svg>
+              Nueva Contratación
+            </button>
+          </div>
+
+          <!-- Tabla de Contratos (REQ-5.1) -->
+          <div class="bg-white dark:bg-slate-900 rounded-2xl border border-slate-200 dark:border-slate-800 shadow-sm overflow-hidden">
+            <div class="overflow-x-auto">
+              <table class="w-full text-left text-sm text-slate-600 dark:text-slate-400">
+                <thead class="bg-slate-50 dark:bg-slate-800/60 text-xs uppercase font-semibold text-slate-500 dark:text-slate-400 border-b border-slate-200 dark:border-slate-800">
+                  <tr>
+                    <th scope="col" class="px-6 py-4">Contrato / Cliente</th>
+                    <th scope="col" class="px-6 py-4">Agente Alquilado</th>
+                    <th scope="col" class="px-6 py-4">Skills Contratadas</th>
+                    <th scope="col" class="px-6 py-4">Vigencia (Inicio - Fin)</th>
+                    <th scope="col" class="px-6 py-4">Importe Total</th>
+                    <th scope="col" class="px-6 py-4 text-right">Acciones</th>
+                  </tr>
+                </thead>
+                <tbody id="contracts-table-body" class="divide-y divide-slate-100 dark:divide-slate-800">
+                  <!-- Se inyecta dinámicamente desde JavaScript -->
+                </tbody>
+              </table>
+            </div>
+          </div>
+
+        </section>
+
+
+        <!-- =================================================================== -->
+        <!-- SECCIÓN 6: LOGS DE ERRORES (Req 8)                                 -->
+        <!-- =================================================================== -->
+        <section id="view-logs" class="space-y-6 hidden">
+          
+          <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+            <div>
+              <h2 class="text-2xl font-bold text-slate-900 dark:text-white tracking-tight">Registro de Errores y Telemetría</h2>
+              <p class="text-sm text-slate-500 dark:text-slate-400">Diagnóstico proactivo de excepciones en herramientas, fallos de sandbox y violaciones de rate limit.</p>
+            </div>
+            <div class="flex items-center space-x-2">
+              <span class="text-xs text-slate-500">Filtrar Gravedad:</span>
+              <span class="px-2.5 py-1 rounded-lg text-xs font-semibold bg-rose-100 text-rose-800 dark:bg-rose-950/60 dark:text-rose-300">Crítico</span>
+              <span class="px-2.5 py-1 rounded-lg text-xs font-semibold bg-orange-100 text-orange-800 dark:bg-orange-950/60 dark:text-orange-300">Alto</span>
+              <span class="px-2.5 py-1 rounded-lg text-xs font-semibold bg-amber-100 text-amber-800 dark:bg-amber-950/60 dark:text-amber-300">Medio</span>
+            </div>
+          </div>
+
+          <!-- Tabla de Logs de Error (REQ-6.1) -->
+          <div class="bg-white dark:bg-slate-900 rounded-2xl border border-slate-200 dark:border-slate-800 shadow-sm overflow-hidden">
+            <div class="overflow-x-auto">
+              <table class="w-full text-left text-sm text-slate-600 dark:text-slate-400">
+                <thead class="bg-slate-50 dark:bg-slate-800/60 text-xs uppercase font-semibold text-slate-500 dark:text-slate-400 border-b border-slate-200 dark:border-slate-800">
+                  <tr>
+                    <th scope="col" class="px-6 py-4">Timestamp (UTC)</th>
+                    <th scope="col" class="px-6 py-4">Agente Afectado</th>
+                    <th scope="col" class="px-6 py-4">Gravedad</th>
+                    <th scope="col" class="px-6 py-4">Tipo de Error</th>
+                    <th scope="col" class="px-6 py-4">Descripción del Fallo</th>
+                    <th scope="col" class="px-6 py-4 text-right">Acciones</th>
+                  </tr>
+                </thead>
+                <tbody id="logs-table-body" class="divide-y divide-slate-100 dark:divide-slate-800">
+                  <!-- Se inyecta dinámicamente desde JavaScript -->
+                </tbody>
+              </table>
+            </div>
+          </div>
+
+        </section>
+
+      </main>
+
+    </div>
+
+  </div>
+
+
+  <!-- ========================================================================= -->
+  <!-- MODALES DE DETALLE Y CONFIGURACIÓN (Overlay con Backdrop Blur)            -->
+  <!-- ========================================================================= -->
+
+  <!-- MODAL 1: Ficha Completa del Usuario (REQ-2.3) -->
+  <div id="modal-user-details" role="dialog" aria-modal="true" aria-labelledby="modal-user-title" class="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-900/60 dark:bg-black/80 backdrop-blur-sm hidden">
+    <div class="modal-card max-w-lg w-full bg-white dark:bg-slate-900 rounded-2xl shadow-2xl border border-slate-200 dark:border-slate-800 overflow-hidden transform transition-all">
+      <div class="p-6 border-b border-slate-100 dark:border-slate-800 flex items-center justify-between">
+        <div class="flex items-center space-x-3">
+          <div id="modal-user-avatar" class="w-12 h-12 rounded-xl bg-indigo-600 text-white flex items-center justify-center font-bold text-lg">
+            AM
+          </div>
+          <div>
+            <h3 id="modal-user-title" class="text-lg font-bold text-slate-900 dark:text-white">Alejandro Morales</h3>
+            <p id="modal-user-email" class="text-xs text-slate-500 font-mono">alejandro@innotech.com</p>
+          </div>
+        </div>
+        <button onclick="closeModal('modal-user-details')" aria-label="Cerrar modal" class="p-1.5 rounded-lg text-slate-400 hover:text-slate-600 dark:hover:text-slate-200 hover:bg-slate-100 dark:hover:bg-slate-800">
+          <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg>
+        </button>
+      </div>
+
+      <div class="p-6 space-y-4 text-sm">
+        <div class="grid grid-cols-2 gap-4">
+          <div class="p-3 bg-slate-50 dark:bg-slate-800/50 rounded-xl">
+            <span class="text-xs text-slate-500 block">Plan Actual</span>
+            <span id="modal-user-plan" class="font-semibold text-indigo-600 dark:text-indigo-400">Enterprise Fleet</span>
+          </div>
+          <div class="p-3 bg-slate-50 dark:bg-slate-800/50 rounded-xl">
+            <span class="text-xs text-slate-500 block">Estado de Cuenta</span>
+            <span id="modal-user-status" class="font-semibold text-emerald-500">Activo</span>
+          </div>
+        </div>
+
+        <div class="space-y-2 pt-2 border-t border-slate-100 dark:border-slate-800">
+          <div class="flex justify-between py-1"><span class="text-slate-500">Empresa / Tenant:</span><span id="modal-user-company" class="font-medium text-slate-800 dark:text-slate-200">InnoTech Dynamics</span></div>
+          <div class="flex justify-between py-1"><span class="text-slate-500">ID de Usuario:</span><span id="modal-user-id" class="font-mono text-xs text-slate-400">usr_98a7bc12e</span></div>
+          <div class="flex justify-between py-1"><span class="text-slate-500">Agentes Asignados:</span><span id="modal-user-agents" class="font-medium text-slate-800 dark:text-slate-200">3 Instancias</span></div>
+          <div class="flex justify-between py-1"><span class="text-slate-500">Gasto Acumulado del Mes:</span><span id="modal-user-spending" class="font-mono font-bold text-slate-900 dark:text-white">$2,145.00 USD</span></div>
+          <div class="flex justify-between py-1"><span class="text-slate-500">Fecha de Registro:</span><span class="text-slate-600 dark:text-slate-400">12 de Enero, 2026</span></div>
+        </div>
+      </div>
+
+      <div class="p-4 bg-slate-50 dark:bg-slate-800/30 border-t border-slate-100 dark:border-slate-800 flex justify-end space-x-3">
+        <button onclick="closeModal('modal-user-details')" class="px-4 py-2 text-sm font-medium rounded-xl bg-slate-200 dark:bg-slate-800 text-slate-700 dark:text-slate-300 hover:bg-slate-300 dark:hover:bg-slate-700">Cerrar</button>
+      </div>
+    </div>
+  </div>
+
+
+  <!-- MODAL 2: Configuración del Prompt de Sistema del Agente (REQ-3.3) -->
+  <div id="modal-agent-config" role="dialog" aria-modal="true" aria-labelledby="modal-agent-title" class="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-900/60 dark:bg-black/80 backdrop-blur-sm hidden">
+    <div class="modal-card max-w-2xl w-full bg-white dark:bg-slate-900 rounded-2xl shadow-2xl border border-slate-200 dark:border-slate-800 overflow-hidden transform transition-all">
+      <div class="p-6 border-b border-slate-100 dark:border-slate-800 flex items-center justify-between">
+        <div>
+          <h3 id="modal-agent-title" class="text-lg font-bold text-slate-900 dark:text-white">Configuración del Agente: Atlas</h3>
+          <p id="modal-agent-subtitle" class="text-xs text-slate-500">Ajusta el Prompt de Sistema y los hiperparámetros de inferencia.</p>
+        </div>
+        <button onclick="closeModal('modal-agent-config')" aria-label="Cerrar modal" class="p-1.5 rounded-lg text-slate-400 hover:text-slate-600 dark:hover:text-slate-200 hover:bg-slate-100 dark:hover:bg-slate-800">
+          <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg>
+        </button>
+      </div>
+
+      <div class="p-6 space-y-4 text-sm">
+        <div>
+          <label class="block text-xs font-semibold uppercase tracking-wider text-slate-500 dark:text-slate-400 mb-2">System Instructions (Prompt del Sistema):</label>
+          <textarea id="modal-agent-prompt" rows="7" class="w-full p-4 rounded-xl font-mono text-xs bg-slate-950 text-emerald-400 border border-slate-800 focus:outline-none focus:ring-2 focus:ring-indigo-500 leading-relaxed">You are Atlas, an Autonomous Market Research Agent deployed by AgentHub.
+Capabilities: Web Browsing via Headless Sandbox, Multimodal Document Extraction.
+Constraints: Always cite the exact source URL and verify corporate filings via official registries. Never execute financial transactions without explicit human approval.</textarea>
+        </div>
+
+        <div class="grid grid-cols-2 gap-4 pt-2">
+          <div>
+            <label class="block text-xs font-semibold text-slate-500 dark:text-slate-400 mb-1">Temperatura del Modelo (0.2):</label>
+            <input type="range" min="0" max="1" step="0.1" value="0.2" class="w-full accent-indigo-600">
+          </div>
+          <div>
+            <label class="block text-xs font-semibold text-slate-500 dark:text-slate-400 mb-1">Límite de Tokens de Salida:</label>
+            <input type="text" value="4,096 tokens" class="w-full px-3 py-1.5 text-xs rounded-xl bg-slate-100 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 text-slate-700 dark:text-slate-300">
+          </div>
+        </div>
+      </div>
+
+      <div class="p-4 bg-slate-50 dark:bg-slate-800/30 border-t border-slate-100 dark:border-slate-800 flex justify-end space-x-3">
+        <button onclick="closeModal('modal-agent-config')" class="px-4 py-2 text-sm font-medium rounded-xl bg-slate-200 dark:bg-slate-800 text-slate-700 dark:text-slate-300 hover:bg-slate-300 dark:hover:bg-slate-700">Cancelar</button>
+        <button onclick="saveAgentConfig()" class="px-4 py-2 text-sm font-medium rounded-xl bg-indigo-600 hover:bg-indigo-700 text-white shadow-md shadow-indigo-600/20">Guardar Cambios</button>
+      </div>
+    </div>
+  </div>
+
+
+  <!-- MODAL 3: Desglose de Contrato y Precios Individuales de Skills (REQ-5.3) -->
+  <div id="modal-contract-breakdown" role="dialog" aria-modal="true" aria-labelledby="modal-contract-title" class="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-900/60 dark:bg-black/80 backdrop-blur-sm hidden">
+    <div class="modal-card max-w-xl w-full bg-white dark:bg-slate-900 rounded-2xl shadow-2xl border border-slate-200 dark:border-slate-800 overflow-hidden transform transition-all">
+      
+      <!-- Cabecera estilo Factura -->
+      <div class="p-6 border-b border-slate-100 dark:border-slate-800 flex items-center justify-between">
+        <div>
+          <span class="text-xs uppercase font-mono font-bold text-indigo-500" id="modal-contract-code">CTR-2026-104</span>
+          <h3 id="modal-contract-title" class="text-lg font-bold text-slate-900 dark:text-white">Desglose Fiscal del Contrato</h3>
+          <p id="modal-contract-client" class="text-xs text-slate-500">InnoTech Dynamics Ltd. (CIF: B-98214412)</p>
+        </div>
+        <button onclick="closeModal('modal-contract-breakdown')" aria-label="Cerrar modal" class="p-1.5 rounded-lg text-slate-400 hover:text-slate-600 dark:hover:text-slate-200 hover:bg-slate-100 dark:hover:bg-slate-800">
+          <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg>
+        </button>
+      </div>
+
+      <!-- Desglose Ítem por Ítem de Skills y Precios (Req 7 & REQ-5.3) -->
+      <div class="p-6 space-y-4 text-sm">
+        <p class="text-xs font-semibold uppercase tracking-wider text-slate-400">Conceptos Contratados y Tarifas Unitarias:</p>
+        
+        <div class="divide-y divide-slate-100 dark:divide-slate-800">
+          
+          <!-- Cuota Base -->
+          <div class="py-2.5 flex justify-between items-center">
+            <div>
+              <p class="font-medium text-slate-800 dark:text-slate-200">Cómputo Base Agente IA (Instancia Dedicada)</p>
+              <p class="text-xs text-slate-400">Modelo Gemini 1.5 Pro - SLA 99.9%</p>
+            </div>
+            <span class="font-mono font-semibold text-slate-900 dark:text-white">$450.00 / mes</span>
+          </div>
+
+          <!-- Skill 1: Web Browsing -->
+          <div class="py-2.5 flex justify-between items-center">
+            <div>
+              <p class="font-medium text-slate-800 dark:text-slate-200">Skill: Navegación Web Autónoma</p>
+              <p class="text-xs text-slate-400">Headless Browser Sandbox + Residential Proxies</p>
+            </div>
+            <span class="font-mono font-semibold text-slate-900 dark:text-white">$120.00 / mes</span>
+          </div>
+
+          <!-- Skill 2: Doc Reader -->
+          <div class="py-2.5 flex justify-between items-center">
+            <div>
+              <p class="font-medium text-slate-800 dark:text-slate-200">Skill: Lectura y Procesamiento de Docs</p>
+              <p class="text-xs text-slate-400">OCR Multimodal + Base Vectorial Dedicada</p>
+            </div>
+            <span class="font-mono font-semibold text-slate-900 dark:text-white">$180.00 / mes</span>
+          </div>
+
+          <!-- Skill 3: Calendar Ops -->
+          <div class="py-2.5 flex justify-between items-center">
+            <div>
+              <p class="font-medium text-slate-800 dark:text-slate-200">Skill: Gestión Ejecutiva de Calendarios</p>
+              <p class="text-xs text-slate-400">Conexión Bidireccional Google & Microsoft 365</p>
+            </div>
+            <span class="font-mono font-semibold text-slate-900 dark:text-white">$100.00 / mes</span>
+          </div>
+
+          <!-- Descuento por Cupón Promocional -->
+          <div class="py-2.5 flex justify-between items-center text-emerald-600 dark:text-emerald-400">
+            <div>
+              <p class="font-medium">Cupón Descuento Bienvenida (STARTUP2026)</p>
+              <p class="text-xs text-emerald-500/80">10% de reducción mensual</p>
+            </div>
+            <span class="font-mono font-semibold">-$85.00 / mes</span>
+          </div>
+
+        </div>
+
+        <!-- Total Liquidado -->
+        <div class="pt-4 border-t-2 border-slate-200 dark:border-slate-800 flex justify-between items-center text-base">
+          <span class="font-bold text-slate-900 dark:text-white">Total Facturado Mensual:</span>
+          <span id="modal-contract-total" class="font-mono font-extrabold text-xl text-indigo-600 dark:text-indigo-400">$765.00 USD</span>
+        </div>
+      </div>
+
+      <div class="p-4 bg-slate-50 dark:bg-slate-800/30 border-t border-slate-100 dark:border-slate-800 flex justify-between items-center">
+        <button onclick="alert('Descargando factura en formato PDF (simulado)...')" class="text-xs font-semibold text-indigo-600 dark:text-indigo-400 hover:underline flex items-center gap-1">
+          <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path></svg>
+          Descargar PDF
+        </button>
+        <button onclick="closeModal('modal-contract-breakdown')" class="px-4 py-2 text-sm font-medium rounded-xl bg-slate-200 dark:bg-slate-800 text-slate-700 dark:text-slate-300 hover:bg-slate-300 dark:hover:bg-slate-700">Cerrar</button>
+      </div>
+
+    </div>
+  </div>
+
+
+  <!-- MODAL 4: Traza Completa del Error y Diagnóstico (REQ-6.3) -->
+  <div id="modal-stack-trace" role="dialog" aria-modal="true" aria-labelledby="modal-trace-title" class="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-900/60 dark:bg-black/80 backdrop-blur-sm hidden">
+    <div class="modal-card max-w-2xl w-full bg-white dark:bg-slate-900 rounded-2xl shadow-2xl border border-slate-200 dark:border-slate-800 overflow-hidden transform transition-all">
+      
+      <div class="p-6 border-b border-slate-100 dark:border-slate-800 flex items-center justify-between">
+        <div>
+          <span class="text-xs uppercase font-mono font-bold text-rose-500" id="modal-trace-badge">CRITICAL EXCEPTION</span>
+          <h3 id="modal-trace-title" class="text-lg font-bold text-slate-900 dark:text-white">Traza de Error: CONTEXT_LENGTH_EXCEEDED</h3>
+          <p id="modal-trace-agent" class="text-xs text-slate-500">Agente afectado: Valkyrie - Doc Extractor (FinCorp Global)</p>
+        </div>
+        <button onclick="closeModal('modal-stack-trace')" aria-label="Cerrar modal" class="p-1.5 rounded-lg text-slate-400 hover:text-slate-600 dark:hover:text-slate-200 hover:bg-slate-100 dark:hover:bg-slate-800">
+          <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg>
+        </button>
+      </div>
+
+      <div class="p-6 space-y-3">
+        <div class="flex items-center justify-between">
+          <span class="text-xs font-semibold text-slate-400 uppercase tracking-wider">Stack Trace de Ejecución:</span>
+          <button onclick="copyStackTrace()" id="btn-copy-trace" class="text-xs font-semibold text-indigo-500 hover:text-indigo-400 flex items-center gap-1">
+            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z"></path></svg>
+            Copiar Traza JSON
+          </button>
+        </div>
+
+        <pre id="modal-trace-code" class="p-4 rounded-xl font-mono text-xs bg-slate-950 text-rose-300 border border-slate-800 overflow-x-auto max-h-64 leading-relaxed select-all">
+[2026-09-14 17:42:10 UTC] ERROR [skill-doc-reader.executor]:
+Exception in Task 'IngestCorporateAudit':
+ContextWindowLimitError: Document 'Audit_2025_Full.pdf' produced 168,420 tokens.
+Model Limit for 'gemini-1.5-pro' task instance is 128,000 tokens.
+
+Traceback (most recent call last):
+  File "/sandbox/skills/doc_reader/runner.py", line 84, in execute_rag_pipeline
+    embeddings = embedder.generate_chunks(pdf_path, chunk_size=1024)
+  File "/sandbox/engine/llm_gateway.py", line 142, in validate_token_budget
+    raise ContextWindowLimitError("Token budget exceeded limit by 40,420 tokens")
+ContextWindowLimitError: Token budget exceeded limit. Suggested action: Enable chunked iterative summarization.
+        </pre>
+      </div>
+
+      <div class="p-4 bg-slate-50 dark:bg-slate-800/30 border-t border-slate-100 dark:border-slate-800 flex justify-end space-x-3">
+        <button onclick="closeModal('modal-stack-trace')" class="px-4 py-2 text-sm font-medium rounded-xl bg-slate-200 dark:bg-slate-800 text-slate-700 dark:text-slate-300 hover:bg-slate-300 dark:hover:bg-slate-700">Cerrar</button>
+      </div>
+
+    </div>
+  </div>
+
+
+  <!-- ========================================================================= -->
+  <!-- JAVASCRIPT NATIVO MODULAR (ES6+)                                         -->
+  <!-- ========================================================================= -->
+  <script>
+    // --- ESTADO GLOBAL REACTIVO (Mock Database) ---
+    const AppState = {
+      activeSection: 'dashboard',
+      failingAgentsCount: 12,
+      users: [
+        { id: 'usr_1', name: 'Alejandro Morales', email: 'alejandro@innotech.com', plan: 'Enterprise Fleet', planColor: 'amber', status: 'Activo', company: 'InnoTech Dynamics', spending: '$2,145.00' },
+        { id: 'usr_2', name: 'Sofía Valenzuela', email: 's.valenzuela@nexaretail.io', plan: 'Business Pro', planColor: 'indigo', status: 'Activo', company: 'NexaRetail Global', spending: '$1,280.00' },
+        { id: 'usr_3', name: 'Carlos Menéndez', email: 'carlos.m@cloudscale.net', plan: 'Business Pro', planColor: 'indigo', status: 'Suspendido', company: 'CloudScale Labs', spending: '$450.00' },
+        { id: 'usr_4', name: 'Lucía Domínguez', email: 'ldominguez@fincorp.org', plan: 'Enterprise Fleet', planColor: 'amber', status: 'Activo', company: 'FinCorp Holdings', spending: '$3,890.00' },
+        { id: 'usr_5', name: 'Javier Restrepo', email: 'javier@logisticsflow.co', plan: 'Starter Fleet', planColor: 'slate', status: 'Inactivo', company: 'LogisticsFlow SA', spending: '$290.00' }
+      ],
+      agents: [
+        {
+          id: 'ag_1',
+          name: 'Atlas - Research Analyst',
+          model: 'Gemini 1.5 Pro',
+          owner: 'InnoTech Dynamics',
+          status: 'Activo',
+          skills: [
+            { id: 's1', name: 'Navegación Web Autónoma', ver: 'v2.4' },
+            { id: 's2', name: 'Lector de Documentos OCR', ver: 'v3.1' }
+          ]
+        },
+        {
+          id: 'ag_2',
+          name: 'Hermes - Executive Calendar Sync',
+          model: 'Claude 3.5 Sonnet',
+          owner: 'NexaRetail Global',
+          status: 'Activo',
+          skills: [
+            { id: 's3', name: 'Gestión de Calendarios OAuth', ver: 'v1.8' },
+            { id: 's4', name: 'Workflows de Negocio CRM', ver: 'v2.0' }
+          ]
+        },
+        {
+          id: 'ag_3',
+          name: 'Valkyrie - Multimodal Doc Extractor',
+          model: 'GPT-4o',
+          owner: 'FinCorp Holdings',
+          status: 'Fallando',
+          skills: [
+            { id: 's2', name: 'Lector de Documentos OCR', ver: 'v3.1' },
+            { id: 's4', name: 'Workflows de Negocio CRM', ver: 'v2.0' }
+          ]
+        },
+        {
+          id: 'ag_4',
+          name: 'Aegis - Security & Scraping Bot',
+          model: 'Gemini 1.5 Pro',
+          owner: 'CloudScale Labs',
+          status: 'Inactivo',
+          skills: [
+            { id: 's1', name: 'Navegación Web Autónoma', ver: 'v2.4' }
+          ]
+        }
+      ],
+      skillsCatalog: [
+        {
+          id: 'skill-web',
+          name: 'Navegación Web Autónoma',
+          desc: 'Exploración de internet, extracción de datos estructurados y ejecución en navegadores sin cabeza con proxy residencial.',
+          agentsUsing: 842,
+          security: 'Sandbox L2 - Red Controlada',
+          iconBg: 'bg-blue-600'
+        },
+        {
+          id: 'skill-doc',
+          name: 'Lectura y Procesamiento de Documentos',
+          desc: 'Ingesta multimodal de archivos PDF, DOCX y XLSX con OCR y consulta semántica RAG en bases vectoriales.',
+          agentsUsing: 1120,
+          security: 'RAG Aislado + Cifrado KMS',
+          iconBg: 'bg-emerald-600'
+        },
+        {
+          id: 'skill-cal',
+          name: 'Gestión de Calendarios y Agendamiento',
+          desc: 'Sincronización bidireccional con Google Calendar y Microsoft 365, resolución inteligente de colisiones y reservas.',
+          agentsUsing: 695,
+          security: 'OAuth 2.0 con Alcance Reducido',
+          iconBg: 'bg-indigo-600'
+        },
+        {
+          id: 'skill-biz',
+          name: 'Workflows de Negocio Específicos',
+          desc: 'Orquestación de procesos de ventas, tickets de atención al cliente e integraciones REST/GraphQL con ERPs.',
+          agentsUsing: 530,
+          security: 'Compuertas Human-in-the-Loop',
+          iconBg: 'bg-purple-600'
+        }
+      ],
+      contracts: [
+        { id: 'CTR-2026-104', client: 'InnoTech Dynamics', agent: 'Atlas', skills: ['Navegación Web', 'Lector Docs'], dates: '01/08/2026 - 01/08/2027', amount: '$765.00 / mes', status: 'Activo' },
+        { id: 'CTR-2026-098', client: 'NexaRetail Global', agent: 'Hermes', skills: ['Calendarios', 'Workflows CRM'], dates: '15/07/2026 - 15/07/2027', amount: '$680.00 / mes', status: 'Activo' },
+        { id: 'CTR-2026-085', client: 'FinCorp Holdings', agent: 'Valkyrie', skills: ['Lector Docs', 'Workflows CRM'], dates: '10/06/2026 - 10/06/2027', amount: '$890.00 / mes', status: 'Activo' },
+        { id: 'CTR-2026-042', client: 'LogisticsFlow SA', agent: 'Aegis', skills: ['Navegación Web'], dates: '01/01/2026 - 01/07/2026', amount: '$420.00 / mes', status: 'Finalizado' }
+      ],
+      logs: [
+        { id: 'log_1', timestamp: '14 Sep 2026 17:42:10', agent: 'Valkyrie', severity: 'CRITICAL', type: 'CONTEXT_LENGTH_EXCEEDED', desc: 'Documento PDF superó la ventana de contexto de 128k tokens.', resolved: false },
+        { id: 'log_2', timestamp: '14 Sep 2026 16:15:33', agent: 'Hermes', severity: 'HIGH', type: 'OAUTH_TOKEN_EXPIRED', desc: 'Fallo de refresh token en Microsoft Graph API.', resolved: false },
+        { id: 'log_3', timestamp: '14 Sep 2026 14:02:45', agent: 'Atlas', severity: 'MEDIUM', type: 'RATE_LIMIT_EXCEEDED', desc: 'Superado límite de 60 peticiones/min en sandbox web.', resolved: false },
+        { id: 'log_4', timestamp: '14 Sep 2026 11:20:18', agent: 'Aegis', severity: 'LOW', type: 'SANDBOX_MEMORY_WARN', desc: 'Uso de memoria > 75%; recolector de basura activado.', resolved: true }
+      ]
+    };
+
+
+    // --- 1. ENRUTADOR DE SECCIONES (Navegación Lateral sin recarga) ---
+    function navigateSection(sectionId) {
+      AppState.activeSection = sectionId;
+      
+      const sections = ['dashboard', 'usuarios', 'agentes', 'skills', 'contrataciones', 'logs'];
+      const sectionTitles = {
+        'dashboard': 'Dashboard General',
+        'usuarios': 'Gestión de Usuarios',
+        'agentes': 'Gestión de Agentes IA',
+        'skills': 'Catálogo de Skills',
+        'contrataciones': 'Contratos y Facturación',
+        'logs': 'Logs de Errores y Telemetría'
+      };
+
+      // Ocultar todas las secciones y mostrar la seleccionada
+      sections.forEach(id => {
+        const viewEl = document.getElementById(`view-${id}`);
+        const navBtn = document.getElementById(`nav-btn-${id}`);
+        if (viewEl) {
+          if (id === sectionId) {
+            viewEl.classList.remove('hidden');
+          } else {
+            viewEl.classList.add('hidden');
+          }
+        }
+        if (navBtn) {
+          if (id === sectionId) {
+            navBtn.classList.remove('text-slate-400', 'hover:bg-slate-800', 'hover:text-white');
+            navBtn.classList.add('bg-indigo-600', 'text-white', 'shadow-md', 'shadow-indigo-600/20');
+          } else {
+            navBtn.classList.remove('bg-indigo-600', 'text-white', 'shadow-md', 'shadow-indigo-600/20');
+            navBtn.classList.add('text-slate-400', 'hover:bg-slate-800', 'hover:text-white');
+          }
+        }
+      });
+
+      // Actualizar título del topbar
+      const titleEl = document.getElementById('topbar-title');
+      if (titleEl) titleEl.textContent = sectionTitles[sectionId] || 'AgentHub';
+
+      // Cerrar cualquier dropdown abierto al navegar
+      closeAllDropdowns();
+    }
+
+
+    // --- 2. CONTROL DEL MODO OSCURO / CLARO (Req 2) ---
+    function initTheme() {
+      const savedTheme = localStorage.getItem('agenthub_theme');
+      const html = document.documentElement;
+      const sunIcon = document.getElementById('theme-icon-sun');
+      const moonIcon = document.getElementById('theme-icon-moon');
+
+      if (savedTheme === 'light') {
+        html.classList.remove('dark');
+        sunIcon.classList.remove('hidden');
+        moonIcon.classList.add('hidden');
+      } else {
+        html.classList.add('dark');
+        sunIcon.classList.add('hidden');
+        moonIcon.classList.remove('hidden');
+      }
+    }
+
+    function toggleTheme() {
+      const html = document.documentElement;
+      const sunIcon = document.getElementById('theme-icon-sun');
+      const moonIcon = document.getElementById('theme-icon-moon');
+      const isDark = html.classList.toggle('dark');
+
+      if (isDark) {
+        localStorage.setItem('agenthub_theme', 'dark');
+        sunIcon.classList.add('hidden');
+        moonIcon.classList.remove('hidden');
+      } else {
+        localStorage.setItem('agenthub_theme', 'light');
+        sunIcon.classList.remove('hidden');
+        moonIcon.classList.add('hidden');
+      }
+    }
+
+
+    // --- 3. RENDERIZADO DINÁMICO DE TABLAS Y COMPONENTES ---
+
+    // 3.1 Renderizar Usuarios
+    function renderUsers() {
+      const tbody = document.getElementById('users-table-body');
+      if (!tbody) return;
+
+      tbody.innerHTML = AppState.users.map((u, idx) => `
+        <tr class="hover:bg-slate-50 dark:hover:bg-slate-800/40 transition-colors">
+          <td class="px-6 py-4">
+            <div class="flex items-center space-x-3">
+              <div class="w-9 h-9 rounded-xl bg-indigo-600/10 text-indigo-600 dark:text-indigo-400 font-bold flex items-center justify-center text-xs">
+                ${u.name.split(' ').map(n=>n[0]).join('').slice(0,2)}
+              </div>
+              <div>
+                <p class="font-semibold text-slate-900 dark:text-white">${u.name}</p>
+                <p class="text-xs text-slate-400">${u.company}</p>
+              </div>
+            </div>
+          </td>
+          <td class="px-6 py-4 font-mono text-xs text-slate-500 dark:text-slate-400">${u.email}</td>
+          <td class="px-6 py-4">
+            <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-semibold ${
+              u.planColor === 'amber' ? 'bg-amber-100 text-amber-800 dark:bg-amber-950/60 dark:text-amber-300' :
+              u.planColor === 'indigo' ? 'bg-indigo-100 text-indigo-800 dark:bg-indigo-950/60 dark:text-indigo-300' :
+              'bg-slate-100 text-slate-800 dark:bg-slate-800 dark:text-slate-300'
+            }">
+              ${u.plan}
+            </span>
+          </td>
+          <td class="px-6 py-4">
+            <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium ${
+              u.status === 'Activo' ? 'bg-emerald-100 text-emerald-800 dark:bg-emerald-950/60 dark:text-emerald-300' :
+              u.status === 'Suspendido' ? 'bg-amber-100 text-amber-800 dark:bg-amber-950/60 dark:text-amber-300' :
+              'bg-slate-100 text-slate-700 dark:bg-slate-800 dark:text-slate-400'
+            }">
+              <span class="w-1.5 h-1.5 rounded-full ${u.status === 'Activo' ? 'bg-emerald-500' : u.status === 'Suspendido' ? 'bg-amber-500' : 'bg-slate-400'} mr-1.5"></span>
+              ${u.status}
+            </span>
+          </td>
+          <td class="px-6 py-4 text-right relative">
+            <button onclick="toggleDropdown('user-drop-${idx}', event)" aria-label="Opciones de usuario" class="p-2 rounded-lg text-slate-400 hover:text-slate-600 dark:hover:text-slate-200 hover:bg-slate-100 dark:hover:bg-slate-800">
+              <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 5v.01M12 12v.01M12 19v.01M12 6a1 1 0 110-2 1 1 0 010 2zm0 7a1 1 0 110-2 1 1 0 010 2zm0 7a1 1 0 110-2 1 1 0 010 2z"></path></svg>
+            </button>
+            <div id="user-drop-${idx}" class="action-dropdown hidden absolute right-6 mt-1 w-44 bg-white dark:bg-slate-800 rounded-xl shadow-xl border border-slate-200 dark:border-slate-700 py-1.5 z-40 text-left">
+              <button onclick="showUserDetails('${u.name}', '${u.email}', '${u.plan}', '${u.status}', '${u.company}', '${u.spending}')" class="w-full px-4 py-2 text-xs text-slate-700 dark:text-slate-200 hover:bg-slate-100 dark:hover:bg-slate-700 flex items-center gap-2">
+                <svg class="w-4 h-4 text-slate-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"></path><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"></path></svg>
+                Ver detalles
               </button>
-              <div class="flex items-center gap-3 rounded-xl border border-slate-200 bg-slate-50 px-2 py-1.5 dark:border-slate-700 dark:bg-slate-800">
-                <div class="flex h-9 w-9 items-center justify-center rounded-full bg-gradient-to-br from-indigo-500 to-violet-600 font-semibold text-white">AM</div>
-                <div class="hidden text-left sm:block">
-                  <div class="text-sm font-medium">Alicia Moreno</div>
-                  <div class="text-[11px] text-slate-500 dark:text-slate-400">Super Admin</div>
-                </div>
-              </div>
+              <button onclick="alert('Opción para editar plan/cuota de ${u.name}')" class="w-full px-4 py-2 text-xs text-slate-700 dark:text-slate-200 hover:bg-slate-100 dark:hover:bg-slate-700 flex items-center gap-2">
+                <svg class="w-4 h-4 text-slate-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"></path></svg>
+                Editar Plan
+              </button>
+              <div class="h-px bg-slate-100 dark:bg-slate-700 my-1"></div>
+              <button onclick="deleteUserRow(this)" class="w-full px-4 py-2 text-xs text-rose-600 dark:text-rose-400 hover:bg-rose-50 dark:hover:bg-rose-950/30 flex items-center gap-2">
+                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"></path></svg>
+                Eliminar
+              </button>
             </div>
-          </div>
-        </header>
+          </td>
+        </tr>
+      `).join('');
+    }
 
-        <main class="p-4 sm:p-6">
-          <section class="app-section active" id="overview">
-            <div class="mb-6 flex items-center justify-between">
-              <div>
-                <p class="text-sm uppercase tracking-[0.2em] text-indigo-500">Dashboard</p>
-                <h2 class="text-3xl font-bold">Overview</h2>
-              </div>
-              <button class="rounded-xl bg-indigo-600 px-4 py-2 text-sm font-medium text-white shadow-lg shadow-indigo-600/25 transition hover:bg-indigo-500">Generate report</button>
-            </div>
+    // 3.2 Renderizar Agentes con Skills Colapsables (Req 5)
+    function renderAgents() {
+      const tbody = document.getElementById('agents-table-body');
+      if (!tbody) return;
 
-            <div class="grid gap-4 md:grid-cols-2 xl:grid-cols-4">
-              <article class="metric-card metric-emerald">
-                <div class="flex items-center justify-between">
-                  <div class="text-sm text-slate-500 dark:text-slate-400">Ingresos del Mes (MRR)</div>
-                  <div class="metric-icon metric-emerald">↗</div>
-                </div>
-                <div class="mt-4 text-3xl font-bold">$128,450.00</div>
-                <div class="mt-2 text-sm text-emerald-600 dark:text-emerald-400">+14.2% vs mes anterior</div>
-              </article>
-
-              <article class="metric-card metric-amber">
-                <div class="flex items-center justify-between">
-                  <div class="text-sm text-slate-500 dark:text-slate-400">Pérdida por Descuentos/Cupones</div>
-                  <div class="metric-icon metric-amber">−</div>
-                </div>
-                <div class="mt-4 text-3xl font-bold">-$14,320.00</div>
-                <div class="mt-2 text-sm text-amber-600 dark:text-amber-400">-2.4% vs mes anterior</div>
-              </article>
-
-              <article class="metric-card metric-indigo">
-                <div class="flex items-center justify-between">
-                  <div class="text-sm text-slate-500 dark:text-slate-400">Agentes Activos Globales</div>
-                  <div class="metric-icon metric-indigo">◎</div>
-                </div>
-                <div class="mt-4 text-3xl font-bold">1,248</div>
-                <div class="mt-2 text-sm text-indigo-600 dark:text-indigo-400">En 142 organizaciones</div>
-              </article>
-
-              <article class="metric-card metric-rose">
-                <div class="flex items-center justify-between">
-                  <div class="text-sm text-slate-500 dark:text-slate-400">Agentes Fallando</div>
-                  <div class="metric-icon metric-rose">!</div>
-                </div>
-                <div class="mt-4 text-3xl font-bold metric-failures">12</div>
-                <div class="mt-2 text-sm text-rose-600 dark:text-rose-400">0.95% de la flota</div>
-              </article>
-            </div>
-
-            <div class="mt-6 rounded-3xl border border-dashed border-slate-300 bg-slate-50/70 p-6 dark:border-slate-700 dark:bg-slate-900/30">
-              <div class="mb-4 flex items-center justify-between">
-                <div>
-                  <div class="text-sm uppercase tracking-[0.18em] text-slate-500 dark:text-slate-400">Performance</div>
-                  <h3 class="text-xl font-semibold">Gráfico de Actividad Semanal de la Flota</h3>
-                </div>
-                <div class="flex gap-2">
-                  <button class="rounded-full bg-slate-200 px-3 py-1 text-xs font-medium text-slate-700 dark:bg-slate-700 dark:text-slate-200">7 Días</button>
-                  <button class="rounded-full bg-indigo-600 px-3 py-1 text-xs font-medium text-white">30 Días</button>
-                </div>
-              </div>
-
-              <div class="chart-grid">
-                <span class="bar bar-1"></span>
-                <span class="bar bar-2"></span>
-                <span class="bar bar-3"></span>
-                <span class="bar bar-4"></span>
-                <span class="bar bar-5"></span>
-                <span class="bar bar-6"></span>
-                <span class="bar bar-7"></span>
-              </div>
-            </div>
-          </section>
-
-          <section class="app-section" id="users">
-            <div class="mb-6 flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
-              <div>
-                <p class="text-sm uppercase tracking-[0.2em] text-indigo-500">Security</p>
-                <h2 class="text-3xl font-bold">User Management</h2>
-              </div>
-              <button class="rounded-xl bg-indigo-600 px-4 py-2 text-sm font-medium text-white">Nuevo Usuario</button>
-            </div>
-
-            <div class="rounded-3xl border border-slate-200 bg-white p-4 shadow-sm dark:border-slate-800 dark:bg-slate-900">
-              <div class="mb-4 flex items-center justify-between">
-                <input type="text" placeholder="Buscar usuario..." class="w-full max-w-md rounded-xl border border-slate-200 bg-slate-50 px-3 py-2 text-sm outline-none ring-0 focus:border-indigo-400 dark:border-slate-700 dark:bg-slate-800" />
-                <div class="ml-3 hidden rounded-full bg-emerald-500/10 px-3 py-1 text-xs font-medium text-emerald-600 dark:text-emerald-400 sm:block">72 usuarios activos</div>
-              </div>
-
-              <div class="overflow-x-auto">
-                <table class="w-full min-w-[760px] text-left text-sm">
-                  <thead class="text-slate-500 dark:text-slate-400">
-                    <tr>
-                      <th class="px-3 py-2 font-medium">Usuario</th>
-                      <th class="px-3 py-2 font-medium">Email Corporativo</th>
-                      <th class="px-3 py-2 font-medium">Plan Contratado</th>
-                      <th class="px-3 py-2 font-medium">Estado</th>
-                      <th class="px-3 py-2 font-medium text-right">Acciones</th>
-                    </tr>
-                  </thead>
-                  <tbody>
-                    <tr class="border-t border-slate-200 dark:border-slate-800">
-                      <td class="px-3 py-3">
-                        <div class="flex items-center gap-3">
-                          <div class="flex h-9 w-9 items-center justify-center rounded-full bg-indigo-100 font-medium text-indigo-700 dark:bg-indigo-950/50 dark:text-indigo-300">NC</div>
-                          <div>
-                            <div class="font-medium">Nora Clarke</div>
-                            <div class="text-xs text-slate-500 dark:text-slate-400">Head of Ops</div>
-                          </div>
-                        </div>
-                      </td>
-                      <td class="px-3 py-3 text-slate-600 dark:text-slate-300">nora@northstar.ai</td>
-                      <td class="px-3 py-3"><span class="badge badge-indigo">Business Pro</span></td>
-                      <td class="px-3 py-3"><span class="status status-active">Activo</span></td>
-                      <td class="px-3 py-3 text-right">
-                        <div class="relative inline-block">
-                          <button class="action-menu-button" aria-label="Acciones de usuario">⋮</button>
-                          <div class="action-menu hidden">
-                            <button class="menu-item open-user-modal">Ver detalles</button>
-                            <button class="menu-item">Editar Plan / Cuota</button>
-                            <button class="menu-item">Suspender Acceso</button>
-                            <button class="menu-item danger">Eliminar Usuario</button>
-                          </div>
-                        </div>
-                      </td>
-                    </tr>
-                    <tr class="border-t border-slate-200 dark:border-slate-800">
-                      <td class="px-3 py-3">
-                        <div class="flex items-center gap-3">
-                          <div class="flex h-9 w-9 items-center justify-center rounded-full bg-amber-100 font-medium text-amber-700 dark:bg-amber-950/40 dark:text-amber-300">DS</div>
-                          <div>
-                            <div class="font-medium">Daniel Soto</div>
-                            <div class="text-xs text-slate-500 dark:text-slate-400">Customer Success</div>
-                          </div>
-                        </div>
-                      </td>
-                      <td class="px-3 py-3 text-slate-600 dark:text-slate-300">daniel@atlasworks.co</td>
-                      <td class="px-3 py-3"><span class="badge badge-slate">Starter Fleet</span></td>
-                      <td class="px-3 py-3"><span class="status status-warning">Suspendido</span></td>
-                      <td class="px-3 py-3 text-right">
-                        <div class="relative inline-block">
-                          <button class="action-menu-button" aria-label="Acciones de usuario">⋮</button>
-                          <div class="action-menu hidden">
-                            <button class="menu-item open-user-modal">Ver detalles</button>
-                            <button class="menu-item">Editar Plan / Cuota</button>
-                            <button class="menu-item">Suspender Acceso</button>
-                            <button class="menu-item danger">Eliminar Usuario</button>
-                          </div>
-                        </div>
-                      </td>
-                    </tr>
-                    <tr class="border-t border-slate-200 dark:border-slate-800">
-                      <td class="px-3 py-3">
-                        <div class="flex items-center gap-3">
-                          <div class="flex h-9 w-9 items-center justify-center rounded-full bg-emerald-100 font-medium text-emerald-700 dark:bg-emerald-950/40 dark:text-emerald-300">RM</div>
-                          <div>
-                            <div class="font-medium">Rita Mendez</div>
-                            <div class="text-xs text-slate-500 dark:text-slate-400">VP of Growth</div>
-                          </div>
-                        </div>
-                      </td>
-                      <td class="px-3 py-3 text-slate-600 dark:text-slate-300">rita@midwestlabs.io</td>
-                      <td class="px-3 py-3"><span class="badge badge-amber">Enterprise Fleet</span></td>
-                      <td class="px-3 py-3"><span class="status status-inactive">Inactivo</span></td>
-                      <td class="px-3 py-3 text-right">
-                        <div class="relative inline-block">
-                          <button class="action-menu-button" aria-label="Acciones de usuario">⋮</button>
-                          <div class="action-menu hidden">
-                            <button class="menu-item open-user-modal">Ver detalles</button>
-                            <button class="menu-item">Editar Plan / Cuota</button>
-                            <button class="menu-item">Suspender Acceso</button>
-                            <button class="menu-item danger">Eliminar Usuario</button>
-                          </div>
-                        </div>
-                      </td>
-                    </tr>
-                  </tbody>
-                </table>
-              </div>
-            </div>
-          </section>
-
-          <section class="app-section" id="fleet">
-            <div class="mb-6">
-              <p class="text-sm uppercase tracking-[0.2em] text-indigo-500">Operations</p>
-              <h2 class="text-3xl font-bold">Agent Fleet Management</h2>
-            </div>
-
-            <div class="rounded-3xl border border-slate-200 bg-white p-4 shadow-sm dark:border-slate-800 dark:bg-slate-900">
-              <div class="mb-4 flex flex-wrap gap-2">
-                <button class="filter-chip active">Todos</button>
-                <button class="filter-chip">Activos</button>
-                <button class="filter-chip">Inactivos</button>
-                <button class="filter-chip">Fallando</button>
-              </div>
-
-              <div class="space-y-3">
-                <div class="agent-row">
-                  <div>
-                    <div class="font-semibold">Atlas - Research Analyst</div>
-                    <div class="text-xs text-slate-500 dark:text-slate-400">Gemini 1.5 Pro</div>
-                  </div>
-                  <div class="text-sm text-slate-600 dark:text-slate-300">Northstar AI</div>
-                  <div><span class="status status-active">Activo</span></div>
-                  <div class="flex gap-2">
-                    <span class="skill-pill">Web</span>
-                    <span class="skill-pill">Docs</span>
-                  </div>
-                  <div class="flex gap-2">
-                    <button class="text-sm text-indigo-600 dark:text-indigo-400">Configurar</button>
-                    <button class="text-sm text-slate-500 dark:text-slate-400">Detener</button>
-                  </div>
-                </div>
-
-                <div class="agent-row">
-                  <div>
-                    <div class="font-semibold">Hermes - Calendar Sync</div>
-                    <div class="text-xs text-slate-500 dark:text-slate-400">GPT-4o</div>
-                  </div>
-                  <div class="text-sm text-slate-600 dark:text-slate-300">AtlasWorks</div>
-                  <div><span class="status status-inactive">En Pausa</span></div>
-                  <div class="flex gap-2">
-                    <span class="skill-pill">Calendar</span>
-                  </div>
-                  <div class="flex gap-2">
-                    <button class="text-sm text-indigo-600 dark:text-indigo-400">Configurar</button>
-                    <button class="text-sm text-slate-500 dark:text-slate-400">Reanudar</button>
-                  </div>
-                </div>
-
-                <div class="agent-row">
-                  <div>
-                    <div class="font-semibold">Valkyrie - Doc Extractor</div>
-                    <div class="text-xs text-slate-500 dark:text-slate-400">Claude 3.5 Sonnet</div>
-                  </div>
-                  <div class="text-sm text-slate-600 dark:text-slate-300">Midwest Labs</div>
-                  <div><span class="status status-warning">Fallando</span></div>
-                  <div class="flex gap-2">
-                    <span class="skill-pill">OCR</span>
-                    <span class="skill-pill">RAG</span>
-                  </div>
-                  <div class="flex gap-2">
-                    <button class="text-sm text-indigo-600 dark:text-indigo-400">Configurar</button>
-                    <button class="text-sm text-slate-500 dark:text-slate-400">Diagnosticar</button>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </section>
-
-          <section class="app-section" id="skills">
-            <div class="mb-6">
-              <p class="text-sm uppercase tracking-[0.2em] text-indigo-500">Capabilities</p>
-              <h2 class="text-3xl font-bold">Skills Registry</h2>
-            </div>
-
-            <div class="rounded-3xl border border-indigo-200 bg-gradient-to-r from-indigo-50 to-purple-50 p-5 dark:border-indigo-900 dark:from-indigo-950/30 dark:to-purple-950/30">
-              <div class="flex items-start justify-between gap-4">
-                <div>
-                  <div class="mb-2 text-lg font-semibold">¿Qué es una Skill en AgentHub?</div>
-                  <p class="max-w-3xl text-sm text-slate-600 dark:text-slate-300">
-                    Una Skill es una unidad funcional autónoma que equipa a un Agente IA con herramientas para interactuar con el entorno real: ejecutar navegación web en sandbox seguro, procesar y consultar documentos corporativos con OCR y RAG, negociar y agendar calendarios vía OAuth o disparar flujos de trabajo en CRMs/ERPs empresariales.
-                  </p>
-                </div>
-                <button class="rounded-full bg-white px-3 py-1 text-xs font-medium text-indigo-700 shadow-sm dark:bg-slate-900 dark:text-indigo-300">Minimizar</button>
-              </div>
-            </div>
-
-            <div class="mt-6 grid gap-4 md:grid-cols-2 xl:grid-cols-3">
-              <article class="skill-card">
-                <div class="skill-icon web">W</div>
-                <div class="mt-4 text-xl font-semibold">Navegación Web Autónoma</div>
-                <p class="mt-2 text-sm text-slate-600 dark:text-slate-300">Exploración competitiva con scraping ético y recolección de datos en tiempo real.</p>
-                <div class="mt-4 flex items-center justify-between text-xs">
-                  <span class="badge badge-indigo">842 Agentes activos</span>
-                  <span class="text-slate-500 dark:text-slate-400">Sandbox Nivel 2</span>
-                </div>
-              </article>
-
-              <article class="skill-card">
-                <div class="skill-icon docs">D</div>
-                <div class="mt-4 text-xl font-semibold">Lector de Documentos Multimodal</div>
-                <p class="mt-2 text-sm text-slate-600 dark:text-slate-300">OCR, extracción estructurada y búsqueda semántica sobre PDFs, DOCX y CSV.</p>
-                <div class="mt-4 flex items-center justify-between text-xs">
-                  <span class="badge badge-emerald">1,120 Agentes activos</span>
-                  <span class="text-slate-500 dark:text-slate-400">RAG Local</span>
-                </div>
-              </article>
-
-              <article class="skill-card">
-                <div class="skill-icon calendar">C</div>
-                <div class="mt-4 text-xl font-semibold">Gestión de Calendarios</div>
-                <p class="mt-2 text-sm text-slate-600 dark:text-slate-300">Coordinación de agenda, reprogramaciones y sincronización OAuth de calendarios.</p>
-                <div class="mt-4 flex items-center justify-between text-xs">
-                  <span class="badge badge-amber">690 Agentes activos</span>
-                  <span class="text-slate-500 dark:text-slate-400">OAuth 2.0</span>
-                </div>
-              </article>
-            </div>
-          </section>
-
-          <section class="app-section" id="contracts">
-            <div class="mb-6">
-              <p class="text-sm uppercase tracking-[0.2em] text-indigo-500">Commercial</p>
-              <h2 class="text-3xl font-bold">Leasing Contracts</h2>
-            </div>
-
-            <div class="grid gap-4 lg:grid-cols-3">
-              <article class="contract-card">
-                <div class="text-xs uppercase tracking-[0.2em] text-slate-500">Starter Fleet</div>
-                <div class="mt-3 text-3xl font-bold">$99<span class="text-base text-slate-500">/mes</span></div>
-                <ul class="mt-4 space-y-2 text-sm text-slate-600 dark:text-slate-300">
-                  <li>• 3 agentes activos</li>
-                  <li>• 1 skill incluida</li>
-                  <li>• Soporte por email</li>
-                </ul>
-                <button class="mt-5 w-full rounded-xl bg-slate-200 px-4 py-2 font-medium text-slate-800 dark:bg-slate-700 dark:text-slate-100">Seleccionar</button>
-              </article>
-
-              <article class="contract-card featured">
-                <div class="text-xs uppercase tracking-[0.2em] text-indigo-500">Business Pro</div>
-                <div class="mt-3 text-3xl font-bold">$299<span class="text-base text-slate-500">/mes</span></div>
-                <ul class="mt-4 space-y-2 text-sm text-slate-600 dark:text-slate-300">
-                  <li>• 25 agentes activos</li>
-                  <li>• 5 skills premium</li>
-                  <li>• KPI dashboard</li>
-                </ul>
-                <button class="mt-5 w-full rounded-xl bg-indigo-600 px-4 py-2 font-medium text-white">Más popular</button>
-              </article>
-
-              <article class="contract-card">
-                <div class="text-xs uppercase tracking-[0.2em] text-amber-500">Enterprise Fleet</div>
-                <div class="mt-3 text-3xl font-bold">Custom</div>
-                <ul class="mt-4 space-y-2 text-sm text-slate-600 dark:text-slate-300">
-                  <li>• SLA dedicado</li>
-                  <li>• Orquestación multi-tenant</li>
-                  <li>• Soporte 24/7</li>
-                </ul>
-                <button class="mt-5 w-full rounded-xl bg-amber-500 px-4 py-2 font-medium text-white">Contact sales</button>
-              </article>
-            </div>
-          </section>
-
-          <section class="app-section" id="logs">
-            <div class="mb-6">
-              <p class="text-sm uppercase tracking-[0.2em] text-indigo-500">Monitoring</p>
-              <h2 class="text-3xl font-bold">Error Logs</h2>
-            </div>
-
-            <div class="grid gap-4 lg:grid-cols-[1.2fr_0.8fr]">
-              <div class="rounded-3xl border border-slate-200 bg-white p-4 dark:border-slate-800 dark:bg-slate-900">
-                <div class="space-y-3">
-                  <div class="log-row">
-                    <div>
-                      <div class="font-medium">Valkyrie - Doc Extractor</div>
-                      <div class="text-xs text-slate-500">Timeout excedido en PDF 8.4 MB</div>
-                    </div>
-                    <span class="badge badge-rose">High</span>
-                  </div>
-                  <div class="log-row">
-                    <div>
-                      <div class="font-medium">Atlas - Research Analyst</div>
-                      <div class="text-xs text-slate-500">Búsqueda bloqueada por política de seguridad</div>
-                    </div>
-                    <span class="badge badge-amber">Medium</span>
-                  </div>
-                  <div class="log-row">
-                    <div>
-                      <div class="font-medium">Hermes - Calendar Sync</div>
-                      <div class="text-xs text-slate-500">Sincronización reintentada con éxito</div>
-                    </div>
-                    <span class="badge badge-emerald">Low</span>
-                  </div>
-                </div>
-              </div>
-
-              <div class="rounded-3xl border border-slate-200 bg-white p-4 text-sm dark:border-slate-800 dark:bg-slate-900">
-                <div class="mb-3 text-lg font-semibold">Resumen de estado</div>
-                <div class="space-y-3">
-                  <div class="flex items-center justify-between"><span>Errores críticos</span><strong>3</strong></div>
-                  <div class="flex items-center justify-between"><span>Agents resolved</span><strong>18</strong></div>
-                  <div class="flex items-center justify-between"><span>Infraestructura</span><strong>Healthy</strong></div>
-                </div>
-              </div>
-            </div>
-          </section>
-        </main>
-      </div>
-    </div>
-
-    <div id="user-modal" class="modal hidden">
-      <div class="modal-backdrop" data-close="modal"></div>
-      <div class="modal-panel">
-        <div class="modal-header">
-          <div class="flex items-center gap-3">
-            <div class="flex h-12 w-12 items-center justify-center rounded-full bg-indigo-100 font-semibold text-indigo-700 dark:bg-indigo-950/40 dark:text-indigo-300">NC</div>
+      tbody.innerHTML = AppState.agents.map((ag, idx) => `
+        <tr class="hover:bg-slate-50 dark:hover:bg-slate-800/40 transition-colors">
+          <td class="px-6 py-4">
             <div>
-              <div class="text-xl font-semibold">Nora Clarke</div>
-              <div class="text-sm text-slate-500 dark:text-slate-400">UUID: 7f8d-9a2c-91aa</div>
+              <p class="font-semibold text-slate-900 dark:text-white">${ag.name}</p>
+              <span class="inline-flex items-center text-[11px] font-mono text-indigo-600 dark:text-indigo-400 bg-indigo-50 dark:bg-indigo-950/40 px-2 py-0.5 rounded border border-indigo-200 dark:border-indigo-800">
+                ${ag.model}
+              </span>
             </div>
-          </div>
-          <button class="modal-close" aria-label="Cerrar">×</button>
-        </div>
+          </td>
+          <td class="px-6 py-4 text-slate-700 dark:text-slate-300 font-medium">${ag.owner}</td>
+          <td class="px-6 py-4">
+            <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-semibold ${
+              ag.status === 'Activo' ? 'bg-emerald-100 text-emerald-800 dark:bg-emerald-950/60 dark:text-emerald-300' :
+              ag.status === 'Inactivo' ? 'bg-amber-100 text-amber-800 dark:bg-amber-950/60 dark:text-amber-300' :
+              'bg-rose-100 text-rose-800 dark:bg-rose-950/60 dark:text-rose-300'
+            }">
+              <span class="w-1.5 h-1.5 rounded-full ${ag.status === 'Activo' ? 'bg-emerald-500' : ag.status === 'Inactivo' ? 'bg-amber-500' : 'bg-rose-500 animate-ping'} mr-1.5"></span>
+              ${ag.status}
+            </span>
+          </td>
+          
+          <!-- Skills Colapsadas con Transición Suave (REQ-3.2) -->
+          <td class="px-6 py-4">
+            <button onclick="toggleSkillsAccordion('skills-panel-${idx}', 'chevron-${idx}')" class="inline-flex items-center px-3 py-1.5 rounded-xl bg-slate-100 dark:bg-slate-800 hover:bg-slate-200 dark:hover:bg-slate-700 text-xs font-medium text-slate-700 dark:text-slate-300 transition-colors">
+              <span>${ag.skills.length} Skills equipadas</span>
+              <svg id="chevron-${idx}" class="w-4 h-4 ml-1.5 transform transition-transform duration-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path>
+              </svg>
+            </button>
+            <div id="skills-panel-${idx}" class="collapsible-content max-h-0 overflow-hidden opacity-0 space-y-1.5 mt-2">
+              ${ag.skills.map(s => `
+                <div class="flex items-center justify-between text-xs px-2.5 py-1.5 bg-slate-50 dark:bg-slate-800/80 rounded-lg border border-slate-200 dark:border-slate-700">
+                  <span class="text-slate-800 dark:text-slate-200 font-medium">${s.name}</span>
+                  <span class="text-[10px] text-slate-400 font-mono">${s.ver}</span>
+                </div>
+              `).join('')}
+            </div>
+          </td>
 
-        <div class="mt-5 grid gap-5 md:grid-cols-2">
-          <div class="space-y-4">
-            <div>
-              <div class="text-xs uppercase tracking-[0.2em] text-slate-500">Contacto</div>
-              <div class="mt-2 font-medium">nora@northstar.ai</div>
+          <!-- Dropdown de Acciones del Agente (REQ-3.3) -->
+          <td class="px-6 py-4 text-right relative">
+            <button onclick="toggleDropdown('agent-drop-${idx}', event)" aria-label="Opciones de agente" class="p-2 rounded-lg text-slate-400 hover:text-slate-600 dark:hover:text-slate-200 hover:bg-slate-100 dark:hover:bg-slate-800">
+              <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 5v.01M12 12v.01M12 19v.01M12 6a1 1 0 110-2 1 1 0 010 2zm0 7a1 1 0 110-2 1 1 0 010 2zm0 7a1 1 0 110-2 1 1 0 010 2z"></path></svg>
+            </button>
+            <div id="agent-drop-${idx}" class="action-dropdown hidden absolute right-6 mt-1 w-44 bg-white dark:bg-slate-800 rounded-xl shadow-xl border border-slate-200 dark:border-slate-700 py-1.5 z-40 text-left">
+              <button onclick="showAgentConfig('${ag.name}')" class="w-full px-4 py-2 text-xs text-slate-700 dark:text-slate-200 hover:bg-slate-100 dark:hover:bg-slate-700 flex items-center gap-2">
+                <svg class="w-4 h-4 text-slate-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z"></path></svg>
+                Configurar Prompt
+              </button>
+              <div class="h-px bg-slate-100 dark:bg-slate-700 my-1"></div>
+              <button onclick="deleteAgentRow(this)" class="w-full px-4 py-2 text-xs text-rose-600 dark:text-rose-400 hover:bg-rose-50 dark:hover:bg-rose-950/30 flex items-center gap-2">
+                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"></path></svg>
+                Eliminar
+              </button>
             </div>
-            <div>
-              <div class="text-xs uppercase tracking-[0.2em] text-slate-500">Empresa</div>
-              <div class="mt-2 font-medium">Northstar AI</div>
+          </td>
+        </tr>
+      `).join('');
+    }
+
+    // 3.3 Renderizar Catálogo de Skills (Req 6)
+    function renderSkillsCatalog() {
+      const grid = document.getElementById('skills-catalog-grid');
+      if (!grid) return;
+
+      grid.innerHTML = AppState.skillsCatalog.map((sk, idx) => `
+        <div class="bg-white dark:bg-slate-900 p-6 rounded-2xl border border-slate-200 dark:border-slate-800 shadow-sm hover:border-indigo-500/50 hover:shadow-md transition-all relative flex flex-col justify-between">
+          <div>
+            <div class="flex items-start justify-between">
+              <div class="w-12 h-12 rounded-xl ${sk.iconBg} text-white flex items-center justify-center shadow-md">
+                <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19.428 15.428a2 2 0 00-1.022-.547l-2.387-.477a6 6 0 00-3.86.517l-.318.158a6 6 0 01-3.86.517L6.05 15.21a2 2 0 00-1.806.547M8 4h8l-1 1v5.172a2 2 0 00.586 1.414l5 5c1.26 1.26.367 3.414-1.415 3.414H4.828c-1.782 0-2.674-2.154-1.414-3.414l5-5A2 2 0 009 10.172V5L8 4z"></path>
+                </svg>
+              </div>
+
+              <!-- Dropdown en Skill -->
+              <div class="relative">
+                <button onclick="toggleDropdown('skill-drop-${idx}', event)" aria-label="Opciones de skill" class="p-1.5 rounded-lg text-slate-400 hover:text-slate-600 dark:hover:text-slate-200 hover:bg-slate-100 dark:hover:bg-slate-800">
+                  <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 5v.01M12 12v.01M12 19v.01M12 6a1 1 0 110-2 1 1 0 010 2zm0 7a1 1 0 110-2 1 1 0 010 2zm0 7a1 1 0 110-2 1 1 0 010 2z"></path></svg>
+                </button>
+                <div id="skill-drop-${idx}" class="action-dropdown hidden absolute right-0 mt-1 w-44 bg-white dark:bg-slate-800 rounded-xl shadow-xl border border-slate-200 dark:border-slate-700 py-1.5 z-40 text-left">
+                  <button onclick="alert('Especificación técnica de ${sk.name}')" class="w-full px-4 py-2 text-xs text-slate-700 dark:text-slate-200 hover:bg-slate-100 dark:hover:bg-slate-700 flex items-center gap-2">Ver detalles</button>
+                  <button onclick="alert('Desactivar del catálogo global')" class="w-full px-4 py-2 text-xs text-rose-600 dark:text-rose-400 hover:bg-rose-50 dark:hover:bg-rose-950/30 flex items-center gap-2">Eliminar</button>
+                </div>
+              </div>
             </div>
-            <div>
-              <div class="text-xs uppercase tracking-[0.2em] text-slate-500">Última conexión</div>
-              <div class="mt-2 font-medium">Hace 12 minutos</div>
-            </div>
+
+            <h3 class="text-base font-bold text-slate-900 dark:text-white mt-4">${sk.name}</h3>
+            <p class="text-xs text-slate-500 dark:text-slate-400 mt-2 leading-relaxed">${sk.desc}</p>
           </div>
 
-          <div class="space-y-4">
-            <div>
-              <div class="text-xs uppercase tracking-[0.2em] text-slate-500">Plan</div>
-              <div class="mt-2"><span class="badge badge-indigo">Business Pro</span></div>
-            </div>
-            <div>
-              <div class="text-xs uppercase tracking-[0.2em] text-slate-500">Agentes asignados</div>
-              <div class="mt-2 font-medium">14</div>
-            </div>
-            <div>
-              <div class="text-xs uppercase tracking-[0.2em] text-slate-500">Facturación acumulada</div>
-              <div class="mt-2 font-medium">$26,400.00</div>
-            </div>
+          <div class="mt-6 pt-4 border-t border-slate-100 dark:border-slate-800 flex items-center justify-between text-xs">
+            <span class="font-mono font-semibold text-indigo-600 dark:text-indigo-400 bg-indigo-50 dark:bg-indigo-950/40 px-2.5 py-1 rounded-lg">
+              ${sk.agentsUsing} Agentes activos
+            </span>
+            <span class="text-[11px] text-slate-400">${sk.security}</span>
           </div>
         </div>
+      `).join('');
+    }
 
-        <div class="mt-6 flex justify-end gap-3">
-          <button class="rounded-xl border border-slate-200 bg-white px-4 py-2 text-sm font-medium text-slate-700 dark:border-slate-700 dark:bg-slate-800 dark:text-slate-200">Descargar Informe</button>
-          <button class="modal-close rounded-xl bg-indigo-600 px-4 py-2 text-sm font-medium text-white">Cerrar</button>
-        </div>
-      </div>
-    </div>
+    // 3.4 Renderizar Contrataciones (Req 7)
+    function renderContracts() {
+      const tbody = document.getElementById('contracts-table-body');
+      if (!tbody) return;
 
-    <script src="app.js"></script>
-  </body>
+      tbody.innerHTML = AppState.contracts.map((c, idx) => `
+        <tr class="hover:bg-slate-50 dark:hover:bg-slate-800/40 transition-colors">
+          <td class="px-6 py-4">
+            <span class="font-mono text-xs font-bold text-indigo-600 dark:text-indigo-400">${c.id}</span>
+            <p class="font-semibold text-slate-900 dark:text-white">${c.client}</p>
+          </td>
+          <td class="px-6 py-4 font-medium text-slate-700 dark:text-slate-300">${c.agent}</td>
+          <td class="px-6 py-4">
+            <div class="flex flex-wrap gap-1">
+              ${c.skills.map(s => `
+                <span class="text-[10px] font-medium px-2 py-0.5 rounded bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-300">
+                  ${s}
+                </span>
+              `).join('')}
+            </div>
+          </td>
+          <td class="px-6 py-4 font-mono text-xs text-slate-500 dark:text-slate-400">${c.dates}</td>
+          <td class="px-6 py-4 font-mono font-bold text-slate-900 dark:text-white">${c.amount}</td>
+          
+          <td class="px-6 py-4 text-right relative">
+            <button onclick="toggleDropdown('contract-drop-${idx}', event)" aria-label="Opciones de contrato" class="p-2 rounded-lg text-slate-400 hover:text-slate-600 dark:hover:text-slate-200 hover:bg-slate-100 dark:hover:bg-slate-800">
+              <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 5v.01M12 12v.01M12 19v.01M12 6a1 1 0 110-2 1 1 0 010 2zm0 7a1 1 0 110-2 1 1 0 010 2zm0 7a1 1 0 110-2 1 1 0 010 2z"></path></svg>
+            </button>
+            <div id="contract-drop-${idx}" class="action-dropdown hidden absolute right-6 mt-1 w-44 bg-white dark:bg-slate-800 rounded-xl shadow-xl border border-slate-200 dark:border-slate-700 py-1.5 z-40 text-left">
+              <button onclick="showContractBreakdown('${c.id}', '${c.client}', '${c.amount}')" class="w-full px-4 py-2 text-xs text-slate-700 dark:text-slate-200 hover:bg-slate-100 dark:hover:bg-slate-700 flex items-center gap-2">
+                <svg class="w-4 h-4 text-slate-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path></svg>
+                Ver detalles
+              </button>
+              <button onclick="alert('Descargando factura en PDF (simulado)...')" class="w-full px-4 py-2 text-xs text-slate-700 dark:text-slate-200 hover:bg-slate-100 dark:hover:bg-slate-700 flex items-center gap-2">
+                Descargar Factura
+              </button>
+            </div>
+          </td>
+        </tr>
+      `).join('');
+    }
+
+    // 3.5 Renderizar Logs de Error con Badges y Resolución Reactiva (Req 8)
+    function renderLogs() {
+      const tbody = document.getElementById('logs-table-body');
+      if (!tbody) return;
+
+      tbody.innerHTML = AppState.logs.map((l, idx) => `
+        <tr id="log-row-${idx}" class="${l.resolved ? 'opacity-40 bg-slate-50/50 dark:bg-slate-900/20' : 'hover:bg-slate-50 dark:hover:bg-slate-800/40'} transition-all">
+          <td class="px-6 py-4 font-mono text-xs text-slate-500">${l.timestamp}</td>
+          <td class="px-6 py-4 font-semibold text-slate-900 dark:text-white">${l.agent}</td>
+          <td class="px-6 py-4" id="log-badge-cell-${idx}">
+            ${l.resolved ? `
+              <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-bold bg-emerald-100 text-emerald-800 dark:bg-emerald-950/60 dark:text-emerald-300">
+                RESUELTO
+              </span>
+            ` : `
+              <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-bold ${
+                l.severity === 'CRITICAL' ? 'bg-rose-100 text-rose-800 dark:bg-rose-950/60 dark:text-rose-300' :
+                l.severity === 'HIGH' ? 'bg-orange-100 text-orange-800 dark:bg-orange-950/60 dark:text-orange-300' :
+                l.severity === 'MEDIUM' ? 'bg-amber-100 text-amber-800 dark:bg-amber-950/60 dark:text-amber-300' :
+                'bg-sky-100 text-sky-800 dark:bg-sky-950/60 dark:text-sky-300'
+              }">
+                ${l.severity}
+              </span>
+            `}
+          </td>
+          <td class="px-6 py-4 font-mono text-xs text-slate-700 dark:text-slate-300">${l.type}</td>
+          <td class="px-6 py-4 text-xs text-slate-500 dark:text-slate-400 max-w-xs truncate">${l.desc}</td>
+          
+          <td class="px-6 py-4 text-right relative">
+            <button onclick="toggleDropdown('log-drop-${idx}', event)" aria-label="Opciones de log" class="p-2 rounded-lg text-slate-400 hover:text-slate-600 dark:hover:text-slate-200 hover:bg-slate-100 dark:hover:bg-slate-800">
+              <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 5v.01M12 12v.01M12 19v.01M12 6a1 1 0 110-2 1 1 0 010 2zm0 7a1 1 0 110-2 1 1 0 010 2zm0 7a1 1 0 110-2 1 1 0 010 2z"></path></svg>
+            </button>
+            <div id="log-drop-${idx}" class="action-dropdown hidden absolute right-6 mt-1 w-48 bg-white dark:bg-slate-800 rounded-xl shadow-xl border border-slate-200 dark:border-slate-700 py-1.5 z-40 text-left">
+              <button onclick="showStackTrace('${l.type}', '${l.agent}', '${l.severity}')" class="w-full px-4 py-2 text-xs text-slate-700 dark:text-slate-200 hover:bg-slate-100 dark:hover:bg-slate-700 flex items-center gap-2">
+                <svg class="w-4 h-4 text-slate-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 20l4-16m4 4l4 4-4 4M6 16l-4-4 4-4"></path></svg>
+                Ver detalles (Traza)
+              </button>
+              ${!l.resolved ? `
+                <button onclick="resolveLog(${idx})" class="w-full px-4 py-2 text-xs text-emerald-600 dark:text-emerald-400 hover:bg-emerald-50 dark:hover:bg-emerald-950/30 flex items-center gap-2 font-medium">
+                  <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg>
+                  Marcar como Resuelto
+                </button>
+              ` : ''}
+            </div>
+          </td>
+        </tr>
+      `).join('');
+    }
+
+
+    // --- 4. ACCIONES INTERACTIVAS Y REACTIVIDAD ---
+
+    // 4.1 Marcar Error como Resuelto (Actualiza Fila y Decrementa Contador del Dashboard)
+    function resolveLog(index) {
+      if (AppState.logs[index]) {
+        AppState.logs[index].resolved = true;
+        
+        // Decrementar contador global
+        if (AppState.failingAgentsCount > 0) {
+          AppState.failingAgentsCount -= 1;
+        }
+
+        // Actualizar UI del dashboard y badge del sidebar
+        const metricEl = document.getElementById('metric-failing-count');
+        const alertBadge = document.getElementById('badge-logs-alert');
+        if (metricEl) metricEl.textContent = AppState.failingAgentsCount;
+        if (alertBadge) alertBadge.textContent = AppState.failingAgentsCount;
+
+        // Re-renderizar logs
+        renderLogs();
+        closeAllDropdowns();
+      }
+    }
+
+    // 4.2 Colapsable de Skills (Transición Suave & Rotación Chevron)
+    function toggleSkillsAccordion(panelId, chevronId) {
+      const panel = document.getElementById(panelId);
+      const chevron = document.getElementById(chevronId);
+      if (!panel || !chevron) return;
+
+      const isExpanded = panel.classList.contains('max-h-60');
+      if (isExpanded) {
+        panel.classList.remove('max-h-60', 'opacity-100');
+        panel.classList.add('max-h-0', 'opacity-0');
+        chevron.classList.remove('rotate-180');
+      } else {
+        panel.classList.remove('max-h-0', 'opacity-0');
+        panel.classList.add('max-h-60', 'opacity-100');
+        chevron.classList.add('rotate-180');
+      }
+    }
+
+    // 4.3 Menús Desplegables (Dropdown Manager con Click-Outside)
+    function toggleDropdown(dropId, event) {
+      event.stopPropagation();
+      const target = document.getElementById(dropId);
+      const isHidden = target.classList.contains('hidden');
+      
+      closeAllDropdowns();
+      if (isHidden) {
+        target.classList.remove('hidden');
+      }
+    }
+
+    function closeAllDropdowns() {
+      document.querySelectorAll('.action-dropdown').forEach(d => d.classList.add('hidden'));
+    }
+
+    // Cerrar dropdowns si se hace clic en cualquier parte de la ventana
+    window.addEventListener('click', () => {
+      closeAllDropdowns();
+    });
+
+    // 4.4 Modales (Apertura, Cierre por Backdrop y Tecla Escape)
+    function openModal(modalId) {
+      const m = document.getElementById(modalId);
+      if (m) {
+        m.classList.remove('hidden');
+        document.body.classList.add('overflow-hidden');
+      }
+    }
+
+    function closeModal(modalId) {
+      const m = document.getElementById(modalId);
+      if (m) {
+        m.classList.add('hidden');
+        document.body.classList.remove('overflow-hidden');
+      }
+    }
+
+    // Cierre por clic en el backdrop de los modales
+    document.querySelectorAll('[role="dialog"]').forEach(modal => {
+      modal.addEventListener('click', (e) => {
+        if (e.target === modal) {
+          closeModal(modal.id);
+        }
+      });
+    });
+
+    // Cierre universal por tecla Escape
+    window.addEventListener('keydown', (e) => {
+      if (e.key === 'Escape') {
+        closeAllDropdowns();
+        document.querySelectorAll('[role="dialog"]').forEach(m => closeModal(m.id));
+      }
+    });
+
+    // Funciones específicas para inyectar datos en modales
+    function showUserDetails(name, email, plan, status, company, spending) {
+      document.getElementById('modal-user-title').textContent = name;
+      document.getElementById('modal-user-email').textContent = email;
+      document.getElementById('modal-user-plan').textContent = plan;
+      document.getElementById('modal-user-status').textContent = status;
+      document.getElementById('modal-user-company').textContent = company;
+      document.getElementById('modal-user-spending').textContent = spending;
+      document.getElementById('modal-user-avatar').textContent = name.split(' ').map(n=>n[0]).join('').slice(0,2);
+      openModal('modal-user-details');
+    }
+
+    function showAgentConfig(agentName) {
+      document.getElementById('modal-agent-title').textContent = `Configuración del Agente: ${agentName}`;
+      openModal('modal-agent-config');
+    }
+
+    function saveAgentConfig() {
+      alert('¡Configuración de System Prompt e hiperparámetros guardada exitosamente!');
+      closeModal('modal-agent-config');
+    }
+
+    function showContractBreakdown(code, client, total) {
+      document.getElementById('modal-contract-code').textContent = code;
+      document.getElementById('modal-contract-client').textContent = client;
+      document.getElementById('modal-contract-total').textContent = total;
+      openModal('modal-contract-breakdown');
+    }
+
+    function showStackTrace(type, agent, severity) {
+      document.getElementById('modal-trace-badge').textContent = `${severity} EXCEPTION`;
+      document.getElementById('modal-trace-title').textContent = `Traza de Error: ${type}`;
+      document.getElementById('modal-trace-agent').textContent = `Agente afectado: ${agent}`;
+      openModal('modal-stack-trace');
+    }
+
+    function copyStackTrace() {
+      const code = document.getElementById('modal-trace-code').innerText;
+      navigator.clipboard.writeText(code).then(() => {
+        const btn = document.getElementById('btn-copy-trace');
+        const oldText = btn.innerHTML;
+        btn.innerHTML = '¡Copiado al Portapapeles!';
+        setTimeout(() => { btn.innerHTML = oldText; }, 2000);
+      });
+    }
+
+    function deleteUserRow(btn) {
+      if (confirm('¿Estás seguro de eliminar este usuario del sistema?')) {
+        const row = btn.closest('tr');
+        if (row) row.remove();
+        const count = document.getElementById('badge-users-count');
+        if (count) count.textContent = parseInt(count.textContent) - 1;
+      }
+    }
+
+    function deleteAgentRow(btn) {
+      if (confirm('¿Estás seguro de desaprovisionar este agente IA?')) {
+        const row = btn.closest('tr');
+        if (row) row.remove();
+      }
+    }
+
+
+    // --- INICIALIZACIÓN AL CARGAR EL DOCUMENTO ---
+    document.addEventListener('DOMContentLoaded', () => {
+      initTheme();
+      renderUsers();
+      renderAgents();
+      renderSkillsCatalog();
+      renderContracts();
+      renderLogs();
+    });
+  </script>
+
+</body>
 </html>
